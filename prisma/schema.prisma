@@ -1,5 +1,5 @@
-// yogaDiary — diario de prácticas (yoga + meditación)
-// Modelo unificado con campos opcionales según tipo.
+// yogaDiary — personal diary of yoga and meditation practices.
+// Unified model: a single Practice row with optional fields per type.
 
 datasource db {
   provider = "sqlite"

@@ -23,65 +23,65 @@ const baseMeditation = {
 };
 
 describe("practiceSchema (discriminated union)", () => {
-  it("parsea una práctica de yoga válida", () => {
+  it("parses a valid yoga practice", () => {
     const result = practiceSchema.safeParse(baseYoga);
     expect(result.success).toBe(true);
   });
 
-  it("parsea una práctica de meditación válida", () => {
+  it("parses a valid meditation practice", () => {
     const result = practiceSchema.safeParse(baseMeditation);
     expect(result.success).toBe(true);
   });
 
-  it("rechaza yoga sin yogaStyle", () => {
+  it("rejects a yoga practice without yogaStyle", () => {
     const { yogaStyle: _omit, ...withoutStyle } = baseYoga;
     void _omit;
     const result = yogaPracticeSchema.safeParse(withoutStyle);
     expect(result.success).toBe(false);
   });
 
-  it("rechaza meditación sin focusObject", () => {
+  it("rejects a meditation practice without focusObject", () => {
     const { focusObject: _omit, ...withoutFocus } = baseMeditation;
     void _omit;
     const result = meditationPracticeSchema.safeParse(withoutFocus);
     expect(result.success).toBe(false);
   });
 
-  it("rechaza meditación sin position", () => {
+  it("rejects a meditation practice without position", () => {
     const { position: _omit, ...withoutPosition } = baseMeditation;
     void _omit;
     const result = meditationPracticeSchema.safeParse(withoutPosition);
     expect(result.success).toBe(false);
   });
 
-  it("rechaza práctica sin guidance", () => {
+  it("rejects a practice without guidance", () => {
     const { guidance: _omit, ...withoutGuidance } = baseYoga;
     void _omit;
     const result = yogaPracticeSchema.safeParse(withoutGuidance);
     expect(result.success).toBe(false);
   });
 
-  it("rechaza guidance fuera del enum", () => {
+  it("rejects a guidance value outside the enum", () => {
     const result = practiceSchema.safeParse({ ...baseYoga, guidance: "invalid" });
     expect(result.success).toBe(false);
   });
 
-  it("rechaza duración no positiva", () => {
+  it("rejects a non-positive duration", () => {
     const result = practiceSchema.safeParse({ ...baseYoga, durationMin: 0 });
     expect(result.success).toBe(false);
   });
 
-  it("rechaza mood fuera de rango 1-5", () => {
+  it("rejects mood values outside the 1-5 range", () => {
     const result = practiceSchema.safeParse({ ...baseYoga, moodBefore: 0 });
     expect(result.success).toBe(false);
   });
 
-  it("acepta mood y notas opcionales", () => {
+  it("accepts optional mood and notes", () => {
     const result = practiceSchema.safeParse({
       ...baseYoga,
       moodBefore: 3,
       moodAfter: 4,
-      notes: "Práctica suave después de un día intenso",
+      notes: "Soft practice after an intense day",
     });
     expect(result.success).toBe(true);
   });
