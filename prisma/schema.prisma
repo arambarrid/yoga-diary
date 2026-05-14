@@ -1,0 +1,33 @@
+// yogaDiary — diario de prácticas (yoga + meditación)
+// Modelo unificado con campos opcionales según tipo.
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Practice {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  date        DateTime
+  type        String
+  durationMin Int
+  guidance    String
+  moodBefore  Int?
+  moodAfter   Int?
+  notes       String?
+
+  yogaStyle String?
+
+  focusObject String?
+  position    String?
+
+  @@index([date])
+  @@index([type])
+}
