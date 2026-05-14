@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# yogaDiary
 
-## Getting Started
+Diario personal de prácticas de yoga y meditación. Proyecto personal, mayo 2026.
 
-First, run the development server:
+## Stack
+
+- **Next.js 16** (App Router) + **TypeScript** estricto
+- **Tailwind CSS** para estilos
+- **Prisma** + **SQLite** (local) — migrable a Postgres
+- **Zod** para validación con discriminated unions
+- **Vitest** (unit) + **Playwright** (E2E)
+- **ESLint** + **Prettier**
+- **GitHub Actions** para CI
+
+## Setup
+
+Requiere Node 24+.
 
 ```bash
+git clone <repo>
+cd yogaDiary
+npm install
+cp .env.example .env
+npx prisma migrate dev      # crea la base SQLite y aplica migraciones
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abre [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Comando                | Qué hace                                   |
+| ---------------------- | ------------------------------------------ |
+| `npm run dev`          | Levanta el dev server                      |
+| `npm run build`        | Build de producción                        |
+| `npm run lint`         | ESLint                                     |
+| `npm run typecheck`    | `tsc --noEmit`                             |
+| `npm run format`       | Formatea con Prettier                      |
+| `npm test`             | Tests unitarios (Vitest, modo watch)       |
+| `npm test -- --run`    | Tests unitarios en CI mode                 |
+| `npm run test:e2e`     | Tests E2E (Playwright, levanta dev server) |
+| `npm run db:migrate`   | Crea/aplica migraciones Prisma             |
+| `npm run db:studio`    | Abre Prisma Studio                         |
 
-## Learn More
+## Modelo de dominio
 
-To learn more about Next.js, take a look at the following resources:
+Una sola entidad `Practice` con un campo `type` ('yoga' \| 'meditation') y columnas opcionales según el tipo. Validación con `z.discriminatedUnion` en `src/lib/schemas.ts`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Campos comunes**: `date`, `durationMin`, `guidance` (en vivo / grabada / autoguiada), `moodBefore`, `moodAfter`, `notes`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**Específicos de yoga**: `yogaStyle` (vinyasa, hatha, ashtanga, yin, restorative, other).
 
-## Deploy on Vercel
+**Específicos de meditación**: `focusObject` (breath, mantra, body_scan, sound, visualization, other), `position` (bed, chair, zafu, floor, cushion, other).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Decisiones técnicas
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Modelo unificado** en vez de entidades separadas: simplifica el listado del diario (una sola query, una sola tabla, una sola UI base) y las queries de estadísticas futuras.
+- **SQLite local** para empezar sin setup; el `provider` en `prisma/schema.prisma` se cambia a `postgresql` cuando se quiera desplegar.
+- **TypeScript estricto** con `noUncheckedIndexedAccess` para bandera de calidad visible.
+- **PR workflow** aunque sea de una sola persona: cada feature en una rama, PR contra `main`, CI corre todo, squash-merge.
+
+## Roadmap
+
+Ver issues abiertas en GitHub para próximas iteraciones (estadísticas, catálogo de asanas, integración con Claude API, PWA, auth, etc.).
