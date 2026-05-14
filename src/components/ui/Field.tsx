@@ -1,0 +1,25 @@
+import type { ReactNode } from "react";
+
+type FieldProps = {
+  label: string;
+  htmlFor?: string;
+  hint?: string;
+  required?: boolean;
+  children: ReactNode;
+};
+
+export function Field({ label, htmlFor, hint, required, children }: FieldProps) {
+  return (
+    <div className="flex flex-col gap-1.5">
+      <label
+        htmlFor={htmlFor}
+        className="text-sm font-medium text-stone-800"
+      >
+        {label}
+        {required ? <span className="text-rose-600"> *</span> : null}
+      </label>
+      {children}
+      {hint ? <p className="text-xs text-stone-500">{hint}</p> : null}
+    </div>
+  );
+}
