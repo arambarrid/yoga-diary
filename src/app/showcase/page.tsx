@@ -23,7 +23,7 @@ export default function ShowcasePage() {
           showcase
         </h1>
         <p className="text-ink-600 max-w-xl">
-          Sistema de diseño de yogaDiary — paleta, tipografía, primitivos y
+          Sistema de diseño de Caleidoscopio — paleta, tipografía, primitivos y
           decoraciones. Esta página existe solo para validar Fase 5.
         </p>
       </section>

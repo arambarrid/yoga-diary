@@ -16,8 +16,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "yogaDiary",
-  description: "Diario personal de prácticas de yoga y meditación",
+  title: "Caleidoscopio",
+  description: "Caleidoscopio — espacio personal para prácticas de yoga y meditación",
 };
 
 export default function RootLayout({

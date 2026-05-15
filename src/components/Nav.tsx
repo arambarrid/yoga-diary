@@ -11,23 +11,9 @@ export function Nav() {
             className="text-brand-primary transition-transform duration-700 group-hover:rotate-180"
           />
           <span className="font-display text-2xl text-brand-primary leading-none">
-            yogaDiary
+            Caleidoscopio
           </span>
         </Link>
-        <nav className="flex items-center gap-2">
-          <Link
-            href="/meditate"
-            className="text-sm font-medium px-4 py-2 rounded-pill text-ink-900 hover:bg-surface-soft transition-colors"
-          >
-            Meditar
-          </Link>
-          <Link
-            href="/practices/new"
-            className="text-sm font-medium px-4 py-2 rounded-pill bg-action text-white hover:bg-action-hover shadow-soft hover:shadow-lifted transition-all"
-          >
-            Nueva práctica
-          </Link>
-        </nav>
       </div>
     </header>
   );

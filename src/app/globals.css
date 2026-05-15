@@ -42,6 +42,11 @@
   --font-display: var(--font-bricolage), system-ui, sans-serif;
   --font-sans: var(--font-inter), system-ui, sans-serif;
 
+  /* Hero composition palette (sage + lavanda + ink contour) */
+  --color-hero-sage: #C3D4B5;
+  --color-hero-lavender: #D6CBE3;
+  --color-hero-contour: #3F3D56;
+
   --text-display-2xl: 5rem;
   --text-display-2xl--line-height: 0.95;
   --text-display-2xl--letter-spacing: -0.04em;
