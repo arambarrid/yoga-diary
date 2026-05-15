@@ -190,11 +190,12 @@ export function MeditationTimer() {
 }
 
 /**
- * Synthesize a soft bell tone reminiscent of a Tibetan singing bowl.
+ * Synthesize a soft bell tone reminiscent of a singing bowl.
  *
- * Two triangle oscillators are stacked: a fundamental at 330 Hz (E4) plus
- * a perfect fifth above (495 Hz) at half the amplitude for harmonic richness.
- * Both layers share an exponential decay envelope over 6 seconds.
+ * Two sine oscillators are stacked: a fundamental at 220 Hz (A3) plus
+ * its octave at 440 Hz (A4) at a lower amplitude for harmonic richness.
+ * Both layers share an exponential decay envelope; the octave fades two
+ * seconds earlier so the fundamental carries the tail.
  */
 function playBell() {
   if (typeof window === "undefined" || !window.AudioContext) return;
@@ -203,9 +204,7 @@ function playBell() {
     const now = ctx.currentTime;
     const decaySeconds = 7;
     const fundamental = createLayer(ctx, 220, "sine", 0.22, now, decaySeconds);
-    const octave = createLayer(ctx, 440, "sine", 0.08, now, decaySeconds - 2);
-    fundamental.onended = () => void ctx.close();
-    void octave;
+    createLayer(ctx, 440, "sine", 0.08, now, decaySeconds - 2);
 
     // Close the audio context after the last oscillator finishes,
     // so we don't leak resources across many sessions.
@@ -215,23 +214,23 @@ function playBell() {
   }
 }
 
-  function createLayer(
-    ctx: AudioContext,
-    frequencyHz: number,
-    waveType: OscillatorType,        // ← nuevo parámetro
-    peakGain: number,
-    startTime: number,
-    decaySeconds: number,
-  ): OscillatorNode {
-    const oscillator = ctx.createOscillator();
-    const gain = ctx.createGain();
-    oscillator.type = waveType;       // ← era "triangle" fijo
-    oscillator.frequency.value = frequencyHz;
-    oscillator.connect(gain);
-    gain.connect(ctx.destination);
-    gain.gain.setValueAtTime(peakGain, startTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, startTime + decaySeconds);
-    oscillator.start(startTime);
-    oscillator.stop(startTime + decaySeconds);
-    return oscillator;
-  } 
+function createLayer(
+  ctx: AudioContext,
+  frequencyHz: number,
+  waveType: OscillatorType,
+  peakGain: number,
+  startTime: number,
+  decaySeconds: number,
+): OscillatorNode {
+  const oscillator = ctx.createOscillator();
+  const gain = ctx.createGain();
+  oscillator.type = waveType;
+  oscillator.frequency.value = frequencyHz;
+  oscillator.connect(gain);
+  gain.connect(ctx.destination);
+  gain.gain.setValueAtTime(peakGain, startTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, startTime + decaySeconds);
+  oscillator.start(startTime);
+  oscillator.stop(startTime + decaySeconds);
+  return oscillator;
+}
