@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { DeletePracticeButton } from "@/components/DeletePracticeButton";
 import { PracticeForm } from "@/components/PracticeForm";
+import { Card } from "@/components/ui/Card";
 import { getPractice } from "@/lib/practice";
 import { practiceTypeLabels } from "@/lib/labels";
 import type {
@@ -26,18 +27,19 @@ export default async function PracticeDetailPage({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <Link href="/" className="text-sm text-stone-500 hover:text-stone-800">
-            ← Volver al diario
-          </Link>
-          <h1 className="text-2xl font-semibold text-stone-900 mt-1">
-            Editar {practiceTypeLabels[type].toLowerCase()}
-          </h1>
-        </div>
+      <div>
+        <Link
+          href="/"
+          className="text-sm text-ink-600 hover:text-brand-primary transition-colors"
+        >
+          ← Volver al diario
+        </Link>
+        <h1 className="font-display text-display-lg text-brand-primary mt-1">
+          Editar {practiceTypeLabels[type].toLowerCase()}
+        </h1>
       </div>
 
-      <div className="rounded-lg border border-stone-200 bg-white p-5">
+      <Card variant="white" padding="lg">
         <PracticeForm
           mode="edit"
           initial={{
@@ -54,9 +56,9 @@ export default async function PracticeDetailPage({
             position: practice.position as Position | null,
           }}
         />
-      </div>
+      </Card>
 
-      <div className="border-t border-stone-200 pt-4">
+      <div className="border-t border-ink-400/15 pt-4">
         <DeletePracticeButton practiceId={practice.id} />
       </div>
     </div>

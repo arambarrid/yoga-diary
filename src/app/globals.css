@@ -1,26 +1,102 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* Brand palette */
+  --color-brand-primary: #8B6FE8;
+  --color-brand-secondary: #6B4FD6;
+
+  /* Action / CTA */
+  --color-action: #FE6132;
+  --color-action-hover: #E5491A;
+
+  /* Surfaces */
+  --color-surface-cream: #FFF8F2;
+  --color-surface-white: #FFFFFF;
+  --color-surface-soft: #F4EEF8;
+
+  /* Yoga accent (soft lilac lavender — feminine, contemplative) */
+  --color-yoga-50: #F4F0FE;
+  --color-yoga-100: #E6DEFC;
+  --color-yoga-500: #B9A7F5;
+  --color-yoga-700: #5E4DB8;
+
+  /* Meditation accent (tropical teal — breath, water) */
+  --color-meditation-50: #F0F8F8;
+  --color-meditation-100: #D8ECEE;
+  --color-meditation-500: #5CA8AD;
+  --color-meditation-700: #2E6A6E;
+
+  /* Tertiary warm (soft blossom — gentle accent) */
+  --color-warm: #FABDCD;
+  --color-warm-soft: #FDE5EC;
+
+  /* Decorative vibrant pink — for sparkles, hero accents */
+  --color-pink-vivid: #F993E9;
+
+  /* Ink (text on cream) */
+  --color-ink-900: #1A0B2E;
+  --color-ink-600: #5D4E7B;
+  --color-ink-400: #9690A8;
+
+  /* Typography */
+  --font-display: var(--font-bricolage), system-ui, sans-serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+
+  /* Hero composition palette (sage + lavanda + ink contour) */
+  --color-hero-sage: #C3D4B5;
+  --color-hero-lavender: #D6CBE3;
+  --color-hero-contour: #3F3D56;
+
+  --text-display-2xl: 5rem;
+  --text-display-2xl--line-height: 0.95;
+  --text-display-2xl--letter-spacing: -0.04em;
+  --text-display-xl: 3.5rem;
+  --text-display-xl--line-height: 1;
+  --text-display-xl--letter-spacing: -0.03em;
+  --text-display-lg: 2.5rem;
+  --text-display-lg--line-height: 1.05;
+  --text-display-lg--letter-spacing: -0.02em;
+  --text-display-md: 1.75rem;
+  --text-display-md--line-height: 1.15;
+
+  /* Radii */
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 2rem;
+  --radius-pill: 9999px;
+
+  /* Shadows with lilac tint matching brand-primary */
+  --shadow-soft: 0 4px 16px -4px rgba(139, 111, 232, 0.08);
+  --shadow-lifted: 0 12px 32px -8px rgba(139, 111, 232, 0.18);
+
+  /* Custom keyframes for decorative animations */
+  --animate-marquee: marquee 30s linear infinite;
+  --animate-spin-slow: spin-slow 12s linear infinite;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-surface-cream);
+  color: var(--color-ink-900);
+  font-family: var(--font-sans);
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

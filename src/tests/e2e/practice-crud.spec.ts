@@ -10,7 +10,10 @@ test("create, edit and delete a yoga practice through the UI", async ({ page }) 
 
   // --- Create ---
   await page.goto("/");
-  await page.getByRole("link", { name: "Nueva práctica" }).click();
+  // Position avoids the lavender "Meditar" cloud, which overlaps the blob's center.
+  await page
+    .getByRole("link", { name: "Registrar práctica" })
+    .click({ position: { x: 280, y: 150 } });
   await expect(page).toHaveURL(/\/practices\/new/);
 
   await page.getByLabel("Tipo de práctica").selectOption("yoga");
