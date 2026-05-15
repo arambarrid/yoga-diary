@@ -10,16 +10,16 @@ type FieldProps = {
 
 export function Field({ label, htmlFor, hint, required, children }: FieldProps) {
   return (
-    <div className="flex flex-col gap-1.5">
+    <div className="flex flex-col gap-2">
       <label
         htmlFor={htmlFor}
-        className="text-sm font-medium text-stone-800"
+        className="text-sm font-medium text-ink-900"
       >
         {label}
-        {required ? <span className="text-rose-600"> *</span> : null}
+        {required ? <span className="text-action ml-0.5">*</span> : null}
       </label>
       {children}
-      {hint ? <p className="text-xs text-stone-500">{hint}</p> : null}
+      {hint ? <p className="text-xs text-ink-600">{hint}</p> : null}
     </div>
   );
 }

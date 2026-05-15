@@ -1,5 +1,7 @@
 import Link from "next/link";
 import type { Practice } from "@prisma/client";
+import { Card } from "@/components/ui/Card";
+import { Badge } from "@/components/ui/Badge";
 import {
   focusObjectLabels,
   guidanceLabels,
@@ -15,62 +17,73 @@ import type {
 } from "@/lib/schemas";
 
 function formatDate(d: Date) {
-  return new Date(d).toLocaleString("es-AR", {
-    dateStyle: "medium",
-    timeStyle: "short",
+  return new Date(d).toLocaleDateString("es-AR", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+function formatTime(d: Date) {
+  return new Date(d).toLocaleTimeString("es-AR", {
+    hour: "2-digit",
+    minute: "2-digit",
   });
 }
 
 export function PracticeCard({ practice }: { practice: Practice }) {
   const isYoga = practice.type === "yoga";
-  const badgeClass = isYoga
-    ? "bg-emerald-100 text-emerald-800"
-    : "bg-violet-100 text-violet-800";
+  const type = practice.type as "yoga" | "meditation";
+
+  const specifics = isYoga
+    ? practice.yogaStyle
+      ? yogaStyleLabels[practice.yogaStyle as YogaStyle]
+      : null
+    : practice.focusObject && practice.position
+      ? `${focusObjectLabels[practice.focusObject as FocusObject]} · ${positionLabels[practice.position as Position]}`
+      : null;
 
   return (
-    <Link
-      href={`/practices/${practice.id}`}
-      className="block rounded-lg border border-stone-200 bg-white p-4 hover:border-stone-400 transition"
-    >
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex flex-col gap-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span
-              className={`text-xs font-medium px-2 py-0.5 rounded-full ${badgeClass}`}
-            >
-              {practiceTypeLabels[practice.type as "yoga" | "meditation"]}
-            </span>
-            <span className="text-sm text-stone-500">
-              {formatDate(practice.date)}
-            </span>
+    <Link href={`/practices/${practice.id}`} className="block">
+      <Card variant="white" interactive className="h-full">
+        <div className="flex flex-col gap-3">
+          <div className="flex items-start justify-between gap-2">
+            <Badge variant={type} size="md">
+              {practiceTypeLabels[type]}
+            </Badge>
+            <div className="text-right text-xs text-ink-600">
+              <div>{formatDate(practice.date)}</div>
+              <div>{formatTime(practice.date)}</div>
+            </div>
           </div>
-          <div className="text-stone-900 font-medium">
-            {practice.durationMin} min ·{" "}
-            {guidanceLabels[practice.guidance as Guidance]}
+
+          <div className="flex flex-col gap-1">
+            <p className="font-display text-display-md text-ink-900 leading-none">
+              {practice.durationMin}{" "}
+              <span className="text-display-md text-ink-600">min</span>
+            </p>
+            <p className="text-sm text-ink-600">
+              {guidanceLabels[practice.guidance as Guidance]}
+              {specifics ? ` · ${specifics}` : null}
+            </p>
           </div>
-          <div className="text-sm text-stone-600">
-            {isYoga && practice.yogaStyle
-              ? yogaStyleLabels[practice.yogaStyle as YogaStyle]
-              : null}
-            {!isYoga && practice.focusObject && practice.position
-              ? `${focusObjectLabels[practice.focusObject as FocusObject]} · ${positionLabels[practice.position as Position]}`
-              : null}
-          </div>
+
           {practice.notes ? (
-            <p className="text-sm text-stone-600 line-clamp-2 mt-1">
+            <p className="text-sm text-ink-600 line-clamp-2">
               {practice.notes}
             </p>
           ) : null}
-        </div>
-        {practice.moodBefore && practice.moodAfter ? (
-          <div className="shrink-0 text-right text-xs text-stone-500">
-            <div>Mood</div>
-            <div className="font-medium text-stone-700">
-              {practice.moodBefore} → {practice.moodAfter}
+
+          {practice.moodBefore && practice.moodAfter ? (
+            <div className="flex items-center gap-1.5 text-xs text-ink-600 pt-1 border-t border-ink-400/10">
+              <span>mood</span>
+              <span className="font-medium text-ink-900">
+                {practice.moodBefore} → {practice.moodAfter}
+              </span>
             </div>
-          </div>
-        ) : null}
-      </div>
+          ) : null}
+        </div>
+      </Card>
     </Link>
   );
 }
