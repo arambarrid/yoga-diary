@@ -13,7 +13,7 @@ export default function MeditatePage() {
           terminar te llevamos al registro con la duración pre-llenada.
         </p>
       </div>
-      <Card variant="meditation" padding="lg">
+      <Card variant="soft" padding="lg">
         <MeditationTimer />
       </Card>
     </div>

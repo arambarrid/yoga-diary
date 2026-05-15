@@ -1,4 +1,5 @@
 import { PracticeForm } from "@/components/PracticeForm";
+import { Card } from "@/components/ui/Card";
 
 type SearchParams = Promise<{
   type?: string;
@@ -17,21 +18,21 @@ export default async function NewPracticePage({
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-semibold text-stone-900">
+        <h1 className="font-display text-display-lg text-brand-primary">
           Nueva práctica
         </h1>
-        <p className="text-sm text-stone-600 mt-1">
+        <p className="text-ink-600 mt-1">
           Registrá una sesión de yoga o de meditación.
         </p>
       </div>
-      <div className="rounded-lg border border-stone-200 bg-white p-5">
+      <Card variant="white" padding="lg">
         <PracticeForm
           initial={{
             type,
             durationMin: Number.isFinite(durationMin) ? durationMin : undefined,
           }}
         />
-      </div>
+      </Card>
     </div>
   );
 }
