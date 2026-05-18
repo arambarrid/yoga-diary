@@ -1,64 +1,64 @@
-# yogaDiary
+# Caleidoscopio
 
-Diario personal de prácticas de yoga y meditación. Proyecto personal, mayo 2026.
+Personal diary for yoga and meditation practices. Personal project, May 2026.
 
 ## Stack
 
-- **Next.js 16** (App Router) + **TypeScript** estricto
-- **Tailwind CSS** para estilos
-- **Prisma** + **SQLite** (local) — migrable a Postgres
-- **Zod** para validación con discriminated unions
+- **Next.js 16** (App Router) + strict **TypeScript**
+- **Tailwind CSS** for styling
+- **Prisma** + **SQLite** (local) — migratable to Postgres
+- **Zod** for validation with discriminated unions
 - **Vitest** (unit) + **Playwright** (E2E)
 - **ESLint** + **Prettier**
-- **GitHub Actions** para CI
+- **GitHub Actions** for CI
 
 ## Setup
 
-Requiere Node 24+.
+Requires Node 24+.
 
 ```bash
 git clone <repo>
-cd yogaDiary
+cd caleidoscopio
 npm install
 cp .env.example .env
-npx prisma migrate dev      # crea la base SQLite y aplica migraciones
+npx prisma migrate dev      # creates the SQLite database and applies migrations
 npm run dev
 ```
 
-Abre [http://localhost:3000](http://localhost:3000).
+Open [http://localhost:3000](http://localhost:3000).
 
 ## Scripts
 
-| Comando                | Qué hace                                   |
-| ---------------------- | ------------------------------------------ |
-| `npm run dev`          | Levanta el dev server                      |
-| `npm run build`        | Build de producción                        |
-| `npm run lint`         | ESLint                                     |
-| `npm run typecheck`    | `tsc --noEmit`                             |
-| `npm run format`       | Formatea con Prettier                      |
-| `npm test`             | Tests unitarios (Vitest, modo watch)       |
-| `npm test -- --run`    | Tests unitarios en CI mode                 |
-| `npm run test:e2e`     | Tests E2E (Playwright, levanta dev server) |
-| `npm run db:migrate`   | Crea/aplica migraciones Prisma             |
-| `npm run db:studio`    | Abre Prisma Studio                         |
+| Command                | What it does                                |
+| ---------------------- | ------------------------------------------- |
+| `npm run dev`          | Start the dev server                        |
+| `npm run build`        | Production build                            |
+| `npm run lint`         | ESLint                                      |
+| `npm run typecheck`    | `tsc --noEmit`                              |
+| `npm run format`       | Format with Prettier                        |
+| `npm test`             | Unit tests (Vitest, watch mode)             |
+| `npm test -- --run`    | Unit tests in CI mode                       |
+| `npm run test:e2e`     | E2E tests (Playwright, starts the dev server) |
+| `npm run db:migrate`   | Create/apply Prisma migrations              |
+| `npm run db:studio`    | Open Prisma Studio                          |
 
-## Modelo de dominio
+## Domain model
 
-Una sola entidad `Practice` con un campo `type` ('yoga' \| 'meditation') y columnas opcionales según el tipo. Validación con `z.discriminatedUnion` en `src/lib/schemas.ts`.
+A single `Practice` entity with a `type` field ('yoga' \| 'meditation') and optional columns depending on the type. Validation via `z.discriminatedUnion` in `src/lib/schemas.ts`.
 
-**Campos comunes**: `date`, `durationMin`, `guidance` (en vivo / grabada / autoguiada), `moodBefore`, `moodAfter`, `notes`.
+**Shared fields**: `date`, `durationMin`, `guidance` (live / recorded / self-guided), `moodBefore`, `moodAfter`, `notes`.
 
-**Específicos de yoga**: `yogaStyle` (vinyasa, hatha, ashtanga, yin, restorative, other).
+**Yoga-specific**: `yogaStyle` (vinyasa, hatha, ashtanga, yin, restorative, other).
 
-**Específicos de meditación**: `focusObject` (breath, mantra, body_scan, sound, visualization, other), `position` (bed, chair, zafu, floor, cushion, other).
+**Meditation-specific**: `focusObject` (breath, mantra, body_scan, sound, visualization, other), `position` (bed, chair, zafu, floor, cushion, other).
 
-## Decisiones técnicas
+## Technical decisions
 
-- **Modelo unificado** en vez de entidades separadas: simplifica el listado del diario (una sola query, una sola tabla, una sola UI base) y las queries de estadísticas futuras.
-- **SQLite local** para empezar sin setup; el `provider` en `prisma/schema.prisma` se cambia a `postgresql` cuando se quiera desplegar.
-- **TypeScript estricto** con `noUncheckedIndexedAccess` para bandera de calidad visible.
-- **PR workflow** aunque sea de una sola persona: cada feature en una rama, PR contra `main`, CI corre todo, squash-merge.
+- **Unified model** instead of separate entities: simplifies the diary listing (one query, one table, one base UI) and future stats queries.
+- **Local SQLite** to start with no setup; the `provider` in `prisma/schema.prisma` switches to `postgresql` when it's time to deploy.
+- **Strict TypeScript** with `noUncheckedIndexedAccess` as a visible quality signal.
+- **PR workflow** even as a solo project: each feature on its own branch, PR against `main`, CI runs everything, squash-merge.
 
 ## Roadmap
 
-Ver issues abiertas en GitHub para próximas iteraciones (estadísticas, catálogo de asanas, integración con Claude API, PWA, auth, etc.).
+See open issues on GitHub for upcoming iterations (stats, asana catalog, Claude API integration, PWA, auth, etc.).
