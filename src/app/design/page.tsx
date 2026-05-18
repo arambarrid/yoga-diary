@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
@@ -76,7 +77,7 @@ const HERO_COMBOS: HeroCombo[] = [
     id: "meditation700-pink",
     leftToken: "meditation-700",
     rightToken: "pink-vivid",
-    note: "Teal oscuro + rosa vibrante. Contemporáneo.",
+    note: "Teal oscuro + rosa vibrante. Actual.",
     props: {
       leftBg: "var(--color-meditation-700)",
       rightBg: "var(--color-pink-vivid)",
@@ -107,21 +108,22 @@ const HERO_COMBOS: HeroCombo[] = [
   },
 ];
 
-/**
- * Temporary design system showcase. Used to validate the Phase 5 design
- * tokens and primitives in isolation. Remove or move under /design before
- * shipping Phase 6.
- */
-export default function ShowcasePage() {
+// Internal design reference for tokens, primitives and hero combinations.
+// Gated to development so it never ships to production.
+export default function DesignPage() {
+  if (process.env.NODE_ENV !== "development") {
+    notFound();
+  }
+
   return (
     <div className="flex flex-col gap-16 pb-24">
       <section className="flex flex-col gap-4">
         <h1 className="font-display text-display-2xl text-brand-primary">
-          showcase
+          design
         </h1>
         <p className="text-ink-600 max-w-xl">
-          Sistema de diseño de Caleidoscopio — paleta, tipografía, primitivos y
-          decoraciones. Esta página existe solo para validar Fase 5.
+          Sistema de diseño de Caleidoscopio — paleta, tipografía, primitivos,
+          decoraciones y combinaciones del hero. Solo visible en development.
         </p>
       </section>
 
@@ -297,8 +299,8 @@ export default function ShowcasePage() {
         <h2 className="font-display text-display-lg">hero — botones</h2>
         <p className="text-sm text-ink-600 max-w-xl">
           Combinaciones de paleta para el par de botones del home. Cada bloque
-          es clickeable (lleva a /practices/new o /meditate). Decime cuál te
-          gusta y la dejo de default.
+          es clickeable (lleva a /practices/new o /meditate). La combinación
+          marcada como &quot;actual&quot; es la que está en uso.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-10">
           {HERO_COMBOS.map((combo, i) => (
