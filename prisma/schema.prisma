@@ -1,4 +1,4 @@
-// yogaDiary — personal diary of yoga and meditation practices.
+// Caleidoscopio — personal diary of yoga and meditation practices.
 // Unified model: a single Practice row with optional fields per type.
 
 datasource db {

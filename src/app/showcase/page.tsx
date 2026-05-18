@@ -9,6 +9,103 @@ import { Sparkle } from "@/components/decorative/Sparkle";
 import { Cloud } from "@/components/decorative/Cloud";
 import { Scallop } from "@/components/decorative/Scallop";
 import { Marquee } from "@/components/decorative/Marquee";
+import { HeroButtons, type HeroButtonsProps } from "@/components/HeroButtons";
+
+type HeroCombo = {
+  id: string;
+  leftToken: string;
+  rightToken: string;
+  note?: string;
+  props: HeroButtonsProps;
+};
+
+const HERO_COMBOS: HeroCombo[] = [
+  {
+    id: "brand-meditation",
+    leftToken: "brand-primary",
+    rightToken: "meditation-500",
+    note: "Referencia. Violeta + teal, contraste complementario.",
+    props: {
+      leftBg: "var(--color-brand-primary)",
+      rightBg: "var(--color-meditation-500)",
+    },
+  },
+  {
+    id: "action-meditation",
+    leftToken: "action",
+    rightToken: "meditation-500",
+    note: "Naranja + teal. Máxima energía.",
+    props: {
+      leftBg: "var(--color-action)",
+      rightBg: "var(--color-meditation-500)",
+    },
+  },
+  {
+    id: "yoga500-meditation500",
+    leftToken: "yoga-500",
+    rightToken: "meditation-500",
+    note: "Lila claro + teal. Más calmo.",
+    props: {
+      leftBg: "var(--color-yoga-500)",
+      rightBg: "var(--color-meditation-500)",
+      leftText: "var(--color-ink-900)",
+    },
+  },
+  {
+    id: "brand-warm",
+    leftToken: "brand-primary",
+    rightToken: "warm",
+    note: "Violeta + rosa suave. Contraste gentil.",
+    props: {
+      leftBg: "var(--color-brand-primary)",
+      rightBg: "var(--color-warm)",
+      rightText: "var(--color-ink-900)",
+    },
+  },
+  {
+    id: "secondary-action",
+    leftToken: "brand-secondary",
+    rightToken: "action",
+    note: "Violeta profundo + naranja. Audaz.",
+    props: {
+      leftBg: "var(--color-brand-secondary)",
+      rightBg: "var(--color-action)",
+    },
+  },
+  {
+    id: "meditation700-pink",
+    leftToken: "meditation-700",
+    rightToken: "pink-vivid",
+    note: "Teal oscuro + rosa vibrante. Contemporáneo.",
+    props: {
+      leftBg: "var(--color-meditation-700)",
+      rightBg: "var(--color-pink-vivid)",
+      rightText: "var(--color-ink-900)",
+    },
+  },
+  {
+    id: "yoga700-meditation500",
+    leftToken: "yoga-700",
+    rightToken: "meditation-500",
+    note: "Lila oscuro + teal. Más sobrio.",
+    props: {
+      leftBg: "var(--color-yoga-700)",
+      rightBg: "var(--color-meditation-500)",
+    },
+  },
+  {
+    id: "hero-soft",
+    leftToken: "hero-sage",
+    rightToken: "hero-lavender",
+    note: "Paleta del hero anterior, pastel.",
+    props: {
+      leftBg: "var(--color-hero-sage)",
+      rightBg: "var(--color-hero-lavender)",
+      leftText: "var(--color-ink-900)",
+      rightText: "var(--color-ink-900)",
+    },
+  },
+];
 
 /**
  * Temporary design system showcase. Used to validate the Phase 5 design
@@ -193,6 +290,30 @@ export default function ShowcasePage() {
           <Marquee
             items={["respirá", "presente", "ahora", "respirá", "presente", "ahora"]}
           />
+        </div>
+      </section>
+
+      <section className="flex flex-col gap-4">
+        <h2 className="font-display text-display-lg">hero — botones</h2>
+        <p className="text-sm text-ink-600 max-w-xl">
+          Combinaciones de paleta para el par de botones del home. Cada bloque
+          es clickeable (lleva a /practices/new o /meditate). Decime cuál te
+          gusta y la dejo de default.
+        </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-10">
+          {HERO_COMBOS.map((combo, i) => (
+            <div key={combo.id} className="flex flex-col gap-3">
+              <HeroButtons {...combo.props} className="max-w-md" />
+              <div className="flex flex-col gap-0.5 px-2">
+                <p className="text-sm font-mono text-ink-900">
+                  {i + 1}. {combo.leftToken} × {combo.rightToken}
+                </p>
+                {combo.note && (
+                  <p className="text-xs text-ink-600">{combo.note}</p>
+                )}
+              </div>
+            </div>
+          ))}
         </div>
       </section>
     </div>
