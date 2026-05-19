@@ -2,7 +2,7 @@
 // Unified model: a single Practice row with optional fields per type.
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
