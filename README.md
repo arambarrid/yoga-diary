@@ -39,7 +39,7 @@ git clone <repo>
 cd caleidoscopio
 npm install
 cp .env.example .env
-# edit .env: paste your Postgres connection string into DATABASE_URL
+# edit .env: set DATABASE_URL (pooled) and DIRECT_URL (direct) from your Neon dashboard
 npx prisma migrate dev      # applies migrations to your database
 npm run dev
 ```
