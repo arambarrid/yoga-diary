@@ -1,9 +1,9 @@
 -- CreateTable
 CREATE TABLE "Practice" (
-    "id" TEXT NOT NULL PRIMARY KEY,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL,
-    "date" DATETIME NOT NULL,
+    "id" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "date" TIMESTAMP(3) NOT NULL,
     "type" TEXT NOT NULL,
     "durationMin" INTEGER NOT NULL,
     "guidance" TEXT NOT NULL,
@@ -12,7 +12,9 @@ CREATE TABLE "Practice" (
     "notes" TEXT,
     "yogaStyle" TEXT,
     "focusObject" TEXT,
-    "position" TEXT
+    "position" TEXT,
+
+    CONSTRAINT "Practice_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex

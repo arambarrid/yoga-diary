@@ -24,7 +24,7 @@ Personal diary for yoga and meditation practices. Personal project, May 2026.
 
 - **Next.js 16** (App Router) + strict **TypeScript**
 - **Tailwind CSS** for styling
-- **Prisma** + **SQLite** (local) — migratable to Postgres
+- **Prisma** + **Postgres** (Neon for dev and prod)
 - **Zod** for validation with discriminated unions
 - **Vitest** (unit) + **Playwright** (E2E)
 - **ESLint** + **Prettier**
@@ -32,14 +32,15 @@ Personal diary for yoga and meditation practices. Personal project, May 2026.
 
 ## Setup
 
-Requires Node 24+.
+Requires Node 24+ and a Postgres database. The fastest path is a free [Neon](https://neon.tech) project.
 
 ```bash
 git clone <repo>
 cd caleidoscopio
 npm install
 cp .env.example .env
-npx prisma migrate dev      # creates the SQLite database and applies migrations
+# edit .env: paste your Postgres connection string into DATABASE_URL
+npx prisma migrate dev      # applies migrations to your database
 npm run dev
 ```
 
@@ -73,7 +74,7 @@ A single `Practice` entity with a `type` field ('yoga' \| 'meditation') and opti
 ## Technical decisions
 
 - **Unified model** instead of separate entities: simplifies the diary listing (one query, one table, one base UI) and future stats queries.
-- **Local SQLite** to start with no setup; the `provider` in `prisma/schema.prisma` switches to `postgresql` when it's time to deploy.
+- **Postgres via Neon** for both local dev and production: serverless, free tier, supports database branching per environment. Connection string is portable to any Postgres host.
 - **Strict TypeScript** with `noUncheckedIndexedAccess` as a visible quality signal.
 - **PR workflow** even as a solo project: each feature on its own branch, PR against `main`, CI runs everything, squash-merge.
 - **Hero pivot — from SVG kaleidoscope to two overlapping circles**: typed Bézier path iteration on the original dihedral SVG plateaued before reaching the desired hand-drawn feel, and the WebGL reference that inspired it was out of scope for the MVP. The replacement (`HeroButtons`) is two flat circles with `z-index` overlap and explicit `aria-label`s that contain the visible text (WCAG 2.5.3 *Label in Name*). Less expressive but predictable and shippable.
