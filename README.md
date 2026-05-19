@@ -2,6 +2,8 @@
 
 Personal diary for yoga and meditation practices. Personal project, May 2026.
 
+**Live**: [caleidoscopio-yoga.vercel.app](https://caleidoscopio-yoga.vercel.app)
+
 ## Screenshots
 
 **Home — diary and quick actions**
