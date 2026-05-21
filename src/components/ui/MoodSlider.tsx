@@ -22,7 +22,8 @@
           step={1}
           value={value ?? 3}
           onChange={(e) => setValue(Number(e.target.value))}
-          className={`w-48 accent-meditation-700 ${engaged ? "" : "opacity-40"}`}
+          style={{ "--value": String(value ?? 3) } as React.CSSProperties}
+          className={`mood-slider w-48 ${engaged ? "" : "opacity-40"}`}
         />
         <span className="w-6 text-center text-sm tabular-nums text-ink-600">
           {engaged ? value : "—"}
