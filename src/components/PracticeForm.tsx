@@ -217,7 +217,7 @@ export function PracticeForm({ initial = {}, mode = "create" }: Props) {
       <div className="flex flex-col gap-3">
         <div>
           <p className="text-sm font-medium text-ink-900">Mood</p>
-          <p className="text-xs text-ink-600">1-5 · opcional</p>
+          <p className="text-xs text-ink-600">1: patrás · 5: prime</p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
