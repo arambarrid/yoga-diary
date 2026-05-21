@@ -7,6 +7,7 @@ import { Field } from "@/components/ui/Field";
 import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
 import { Textarea } from "@/components/ui/Textarea";
+import { MoodSlider } from "@/components/ui/MoodSlider";
 import {
   focusObjectLabels,
   guidanceLabels,
@@ -213,28 +214,33 @@ export function PracticeForm({ initial = {}, mode = "create" }: Props) {
         </div>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <Field label="Mood antes (1-5)" htmlFor="moodBefore" hint="Opcional">
-          <Input
-            id="moodBefore"
-            name="moodBefore"
-            type="number"
-            min={1}
-            max={5}
-            defaultValue={initial.moodBefore ?? ""}
-          />
-        </Field>
+      <div className="flex flex-col gap-3">
+        <div>
+          <p className="text-sm font-medium text-ink-900">Mood</p>
+          <p className="text-xs text-ink-600">1-5 · opcional</p>
+        </div>
 
-        <Field label="Mood después (1-5)" htmlFor="moodAfter" hint="Opcional">
-          <Input
-            id="moodAfter"
-            name="moodAfter"
-            type="number"
-            min={1}
-            max={5}
-            defaultValue={initial.moodAfter ?? ""}
-          />
-        </Field>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div className="mx-auto w-fit text-center">
+            <Field label="Antes" htmlFor="moodBefore">
+              <MoodSlider
+                id="moodBefore"
+                name="moodBefore"
+                defaultValue={initial.moodBefore ?? null}
+              />
+            </Field>
+          </div>
+
+          <div className="mx-auto w-fit text-center">
+            <Field label="Después" htmlFor="moodAfter">
+              <MoodSlider
+                id="moodAfter"
+                name="moodAfter"
+                defaultValue={initial.moodAfter ?? null}
+              />
+            </Field>
+          </div>
+        </div>
       </div>
 
       <Field label="Notas" htmlFor="notes" hint="Opcional · sensaciones, insights, contexto">
