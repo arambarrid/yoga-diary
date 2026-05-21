@@ -143,7 +143,7 @@ export function PracticeForm({ initial = {}, mode = "create" }: Props) {
             type="number"
             min={1}
             max={1440}
-            defaultValue={initial.durationMin ?? (type=="meditation"? 15:60)}
+            defaultValue={initial.durationMin ?? (type === "meditation" ? 15 : 60)}
             required
           />
         </Field>

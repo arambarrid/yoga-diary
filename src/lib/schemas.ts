@@ -4,6 +4,7 @@ export const guidanceEnum = z.enum(["live", "recorded", "self"]);
 export type Guidance = z.infer<typeof guidanceEnum>;
 
 export const yogaStyleEnum = z.enum([
+  "integral",
   "vinyasa",
   "hatha",
   "ashtanga",
