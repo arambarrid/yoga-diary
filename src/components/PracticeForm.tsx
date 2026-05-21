@@ -226,7 +226,7 @@ export function PracticeForm({ initial = {}, mode = "create" }: Props) {
               <MoodSlider
                 id="moodBefore"
                 name="moodBefore"
-                defaultValue={initial.moodBefore ?? null}
+                defaultValue={initial.moodBefore ?? 3}
               />
             </Field>
           </div>
@@ -236,7 +236,7 @@ export function PracticeForm({ initial = {}, mode = "create" }: Props) {
               <MoodSlider
                 id="moodAfter"
                 name="moodAfter"
-                defaultValue={initial.moodAfter ?? null}
+                defaultValue={initial.moodAfter ?? 3}
               />
             </Field>
           </div>
