@@ -221,7 +221,7 @@ export function PracticeForm({ initial = {}, mode = "create" }: Props) {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-          <div className="mx-auto w-fit text-center">
+          <div className="mx-auto w-full sm:w-fit text-center">
             <Field label="Antes" htmlFor="moodBefore">
               <MoodSlider
                 id="moodBefore"
@@ -231,7 +231,7 @@ export function PracticeForm({ initial = {}, mode = "create" }: Props) {
             </Field>
           </div>
 
-          <div className="mx-auto w-fit text-center">
+          <div className="mx-auto w-full sm:w-fit text-center">
             <Field label="Después" htmlFor="moodAfter">
               <MoodSlider
                 id="moodAfter"

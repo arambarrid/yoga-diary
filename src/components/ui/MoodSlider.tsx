@@ -22,7 +22,7 @@
           value={value}
           onChange={(e) => setValue(Number(e.target.value))}
           style={{ "--value": String(value) } as React.CSSProperties}
-          className="mood-slider w-60 sm:w-48"
+          className="mood-slider w-full sm:w-60"
         />
         <span className="text-xs tabular-nums text-ink-400">{value}</span>
         <input type="hidden" name={name} value={value} />
