@@ -19,12 +19,7 @@ import type {
 } from "@/lib/schemas";
 
 
-function formatTime(d: Date) {
-  return new Date(d).toLocaleTimeString("es-AR", {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
+
 
 export function PracticeCard({ practice }: { practice: Practice }) {
   const isYoga = practice.type === "yoga";

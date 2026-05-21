@@ -1,6 +1,6 @@
   "use client";
 
-  import { useEffect, useState } from "react";
+  import { useSyncExternalStore } from "react";
 
   type Props = {
     date: Date | string;
@@ -24,12 +24,13 @@
     };
   }
 
-  export function LocalDateTime({ date, className }: Props) {
-    const [parts, setParts] = useState(() => format(date, "UTC"));
+  const subscribe = () => () => {};
+  const getSnapshot = () => true;
+  const getServerSnapshot = () => false;
 
-    useEffect(() => {
-      setParts(format(date));
-    }, [date]);
+  export function LocalDateTime({ date, className }: Props) {
+    const isClient = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+    const parts = format(date, isClient ? undefined : "UTC");
 
     return (
       <div className={className}>
