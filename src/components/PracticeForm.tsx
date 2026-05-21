@@ -138,11 +138,12 @@ export function PracticeForm({ initial = {}, mode = "create" }: Props) {
         <Field label="Duración (minutos)" htmlFor="durationMin" required>
           <Input
             id="durationMin"
+            key={type}
             name="durationMin"
             type="number"
             min={1}
             max={1440}
-            defaultValue={initial.durationMin ?? 60}
+            defaultValue={initial.durationMin ?? (type === "meditation" ? 15 : 60)}
             required
           />
         </Field>
@@ -152,7 +153,7 @@ export function PracticeForm({ initial = {}, mode = "create" }: Props) {
         <Select
           id="guidance"
           name="guidance"
-          defaultValue={initial.guidance ?? "self"}
+          defaultValue={initial.guidance ?? "live"}
           required
         >
           {Object.entries(guidanceLabels).map(([value, label]) => (
@@ -168,7 +169,7 @@ export function PracticeForm({ initial = {}, mode = "create" }: Props) {
           <Select
             id="yogaStyle"
             name="yogaStyle"
-            defaultValue={initial.yogaStyle ?? "vinyasa"}
+            defaultValue={initial.yogaStyle ?? "integral"}
             required
           >
             {Object.entries(yogaStyleLabels).map(([value, label]) => (
