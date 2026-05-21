@@ -3,6 +3,7 @@ import type { Practice } from "@prisma/client";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { NotesPreview } from "@/components/ui/NotesPreview";
+import { LocalDateTime } from "@/components/ui/LocalDateTime";
 import {
   focusObjectLabels,
   guidanceLabels,
@@ -17,20 +18,8 @@ import type {
   YogaStyle,
 } from "@/lib/schemas";
 
-function formatDate(d: Date) {
-  return new Date(d).toLocaleDateString("es-AR", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
-}
 
-function formatTime(d: Date) {
-  return new Date(d).toLocaleTimeString("es-AR", {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
+
 
 export function PracticeCard({ practice }: { practice: Practice }) {
   const isYoga = practice.type === "yoga";
@@ -52,10 +41,7 @@ export function PracticeCard({ practice }: { practice: Practice }) {
             <Badge variant={type} size="md">
               {practiceTypeLabels[type]}
             </Badge>
-            <div className="text-right text-xs text-ink-600">
-              <div>{formatDate(practice.date)}</div>
-              <div>{formatTime(practice.date)}</div>
-            </div>
+              <LocalDateTime date={practice.date} className="text-right text-xs text-ink-600" />
           </div>
 
           <div className="flex flex-col gap-1">
