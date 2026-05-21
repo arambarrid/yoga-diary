@@ -12,6 +12,7 @@ export const guidanceLabels: Record<Guidance, string> = {
 };
 
 export const yogaStyleLabels: Record<YogaStyle, string> = {
+  integral:"Integral",
   vinyasa: "Vinyasa",
   hatha: "Hatha",
   ashtanga: "Ashtanga",
