@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Practice } from "@prisma/client";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
+import { NotesPreview } from "@/components/ui/NotesPreview";
 import {
   focusObjectLabels,
   guidanceLabels,
@@ -68,11 +69,7 @@ export function PracticeCard({ practice }: { practice: Practice }) {
             </p>
           </div>
 
-          {practice.notes ? (
-            <p className="text-sm text-ink-600 line-clamp-2">
-              {practice.notes}
-            </p>
-          ) : null}
+          {practice.notes ? <NotesPreview notes={practice.notes} /> : null}
 
           {practice.moodBefore && practice.moodAfter ? (
             <div className="flex items-center gap-1.5 text-xs text-ink-600 pt-1 border-t border-ink-400/10">
