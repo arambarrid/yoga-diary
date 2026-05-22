@@ -48,7 +48,7 @@ test("create, edit and delete a yoga practice through the UI", async ({ page }) 
   await expect(page.locator("a", { hasText: marker })).toHaveCount(0);
 });
 
-test("create a meditation practice with focus object and position", async ({ page }) => {
+test("create a meditation practice with multiple focus objects and position", async ({ page }) => {
   const marker = `E2E_MEDITATION_${Date.now()}`;
 
   await page.goto("/practices/new");
@@ -56,7 +56,8 @@ test("create a meditation practice with focus object and position", async ({ pag
   await page.getByLabel("Tipo de práctica").selectOption("meditation");
   await page.getByLabel("Duración (minutos)").fill("15");
   await page.getByLabel("¿Cómo fue guiada?").selectOption("recorded");
-  await page.getByLabel("Objeto de foco").selectOption("breath");
+  await page.getByRole("checkbox", { name: "Respiración" }).check();
+  await page.getByRole("checkbox", { name: "Mantra" }).check();
   await page.getByLabel("Posición / lugar").selectOption("zafu");
   await page.getByLabel("Notas").fill(marker);
 
@@ -67,6 +68,7 @@ test("create a meditation practice with focus object and position", async ({ pag
   await expect(card).toBeVisible();
   await expect(card).toContainText("15 min");
   await expect(card).toContainText("Respiración");
+  await expect(card).toContainText("Mantra");
   await expect(card).toContainText("Zafu");
 
   // Clean up after the test to keep the dev database tidy.
