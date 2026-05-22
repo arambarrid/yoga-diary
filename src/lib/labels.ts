@@ -1,9 +1,4 @@
-import type {
-  FocusObject,
-  Guidance,
-  Position,
-  YogaStyle,
-} from "@/lib/schemas";
+import type { FocusObject, Guidance, Position, YogaStyle } from "@/lib/schemas";
 
 export const guidanceLabels: Record<Guidance, string> = {
   live: "Guiada en vivo",

@@ -7,19 +7,14 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        primary:
-          "bg-action text-white hover:bg-action-hover shadow-soft hover:shadow-lifted",
-        secondary:
-          "bg-brand-primary text-white hover:bg-brand-secondary shadow-soft",
+        primary: "bg-action text-white hover:bg-action-hover shadow-soft hover:shadow-lifted",
+        secondary: "bg-brand-primary text-white hover:bg-brand-secondary shadow-soft",
         meditation:
           "bg-meditation-500 text-ink-900 hover:bg-meditation-700 hover:text-white shadow-soft hover:shadow-lifted",
-        yoga:
-          "bg-yoga-500 text-ink-900 hover:bg-yoga-700 hover:text-white shadow-soft hover:shadow-lifted",
-        outline:
-          "border-2 border-brand-primary text-brand-primary hover:bg-surface-soft",
+        yoga: "bg-yoga-500 text-ink-900 hover:bg-yoga-700 hover:text-white shadow-soft hover:shadow-lifted",
+        outline: "border-2 border-brand-primary text-brand-primary hover:bg-surface-soft",
         ghost: "text-brand-primary hover:bg-surface-soft",
-        danger:
-          "border-2 border-yoga-700 text-yoga-700 hover:bg-yoga-50",
+        danger: "border-2 border-yoga-700 text-yoga-700 hover:bg-yoga-50",
       },
       size: {
         sm: "h-9 px-4 text-sm rounded-pill",
@@ -40,10 +35,6 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   ref,
 ) {
   return (
-    <button
-      ref={ref}
-      className={cn(buttonVariants({ variant, size }), className)}
-      {...props}
-    />
+    <button ref={ref} className={cn(buttonVariants({ variant, size }), className)} {...props} />
   );
 });

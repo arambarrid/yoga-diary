@@ -26,7 +26,7 @@ model Practice {
 
   yogaStyle String?
 
-  focusObject String?
+  focusObjects String[] @default([])
   position    String?
 
   @@index([date])

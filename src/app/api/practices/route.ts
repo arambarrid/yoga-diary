@@ -1,11 +1,7 @@
 import type { NextRequest } from "next/server";
 import { ZodError } from "zod";
 import { practiceSchema } from "@/lib/schemas";
-import {
-  createPractice,
-  listPractices,
-  practiceFilterSchema,
-} from "@/lib/practice";
+import { createPractice, listPractices, practiceFilterSchema } from "@/lib/practice";
 
 export async function GET(request: NextRequest) {
   const params = request.nextUrl.searchParams;

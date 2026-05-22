@@ -26,15 +26,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="es"
-      className={`${bricolage.variable} ${inter.variable} h-full antialiased`}
-    >
+    <html lang="es" className={`${bricolage.variable} ${inter.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
         <Nav />
-        <main className="flex-1 w-full max-w-5xl mx-auto px-6 py-8">
-          {children}
-        </main>
+        <main className="flex-1 w-full max-w-5xl mx-auto px-6 py-8">{children}</main>
       </body>
     </html>
   );

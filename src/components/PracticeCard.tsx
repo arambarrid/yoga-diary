@@ -11,15 +11,7 @@ import {
   practiceTypeLabels,
   yogaStyleLabels,
 } from "@/lib/labels";
-import type {
-  FocusObject,
-  Guidance,
-  Position,
-  YogaStyle,
-} from "@/lib/schemas";
-
-
-
+import type { FocusObject, Guidance, Position, YogaStyle } from "@/lib/schemas";
 
 export function PracticeCard({ practice }: { practice: Practice }) {
   const isYoga = practice.type === "yoga";
@@ -29,8 +21,10 @@ export function PracticeCard({ practice }: { practice: Practice }) {
     ? practice.yogaStyle
       ? yogaStyleLabels[practice.yogaStyle as YogaStyle]
       : null
-    : practice.focusObject && practice.position
-      ? `${focusObjectLabels[practice.focusObject as FocusObject]} · ${positionLabels[practice.position as Position]}`
+    : practice.focusObjects.length > 0 && practice.position
+      ? `${practice.focusObjects
+          .map((fo) => focusObjectLabels[fo as FocusObject])
+          .join(" · ")} · ${positionLabels[practice.position as Position]}`
       : null;
 
   return (
@@ -41,13 +35,12 @@ export function PracticeCard({ practice }: { practice: Practice }) {
             <Badge variant={type} size="md">
               {practiceTypeLabels[type]}
             </Badge>
-              <LocalDateTime date={practice.date} className="text-right text-xs text-ink-600" />
+            <LocalDateTime date={practice.date} className="text-right text-xs text-ink-600" />
           </div>
 
           <div className="flex flex-col gap-1">
             <p className="font-display text-display-md text-ink-900 leading-none">
-              {practice.durationMin}{" "}
-              <span className="text-display-md text-ink-600">min</span>
+              {practice.durationMin} <span className="text-display-md text-ink-600">min</span>
             </p>
             <p className="text-sm text-ink-600">
               {guidanceLabels[practice.guidance as Guidance]}

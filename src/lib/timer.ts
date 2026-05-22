@@ -8,11 +8,7 @@ export function minutesToMs(minutes: number): number {
   return Math.round(minutes * 60 * 1000);
 }
 
-export function computeRemainingMs(
-  now: number,
-  startedAt: number,
-  durationMs: number,
-): number {
+export function computeRemainingMs(now: number, startedAt: number, durationMs: number): number {
   const elapsed = now - startedAt;
   return Math.max(0, durationMs - elapsed);
 }

@@ -6,11 +6,7 @@ type SearchParams = Promise<{
   durationMin?: string;
 }>;
 
-export default async function NewPracticePage({
-  searchParams,
-}: {
-  searchParams: SearchParams;
-}) {
+export default async function NewPracticePage({ searchParams }: { searchParams: SearchParams }) {
   const raw = await searchParams;
   const type = raw.type === "meditation" ? "meditation" : raw.type === "yoga" ? "yoga" : undefined;
   const durationMin = raw.durationMin ? Number(raw.durationMin) : undefined;
@@ -18,12 +14,8 @@ export default async function NewPracticePage({
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="font-display text-display-lg text-brand-primary">
-          Nueva práctica
-        </h1>
-        <p className="text-ink-600 mt-1">
-          Registrá una sesión de yoga o de meditación.
-        </p>
+        <h1 className="font-display text-display-lg text-brand-primary">Nueva práctica</h1>
+        <p className="text-ink-600 mt-1">Registrá una sesión de yoga o de meditación.</p>
       </div>
       <Card variant="white" padding="lg">
         <PracticeForm

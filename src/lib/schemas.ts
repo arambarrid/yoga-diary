@@ -24,21 +24,18 @@ export const focusObjectEnum = z.enum([
 ]);
 export type FocusObject = z.infer<typeof focusObjectEnum>;
 
-export const positionEnum = z.enum([
-  "bed",
-  "chair",
-  "zafu",
-  "floor",
-  "cushion",
-  "other",
-]);
+export const positionEnum = z.enum(["bed", "chair", "zafu", "floor", "cushion", "other"]);
 export type Position = z.infer<typeof positionEnum>;
 
 const moodScale = z.number().int().min(1).max(5);
 
 const commonFields = {
   date: z.coerce.date(),
-  durationMin: z.number().int().positive().max(24 * 60),
+  durationMin: z
+    .number()
+    .int()
+    .positive()
+    .max(24 * 60),
   guidance: guidanceEnum,
   moodBefore: moodScale.optional().nullable(),
   moodAfter: moodScale.optional().nullable(),
@@ -53,7 +50,7 @@ export const yogaPracticeSchema = z.object({
 
 export const meditationPracticeSchema = z.object({
   type: z.literal("meditation"),
-  focusObject: focusObjectEnum,
+  focusObjects: focusObjectEnum.array().min(1),
   position: positionEnum,
   ...commonFields,
 });

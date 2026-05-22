@@ -7,11 +7,7 @@ import { cn } from "@/lib/utils";
 
 type SearchParams = Promise<{ type?: string }>;
 
-export default async function HomePage({
-  searchParams,
-}: {
-  searchParams: SearchParams;
-}) {
+export default async function HomePage({ searchParams }: { searchParams: SearchParams }) {
   const raw = await searchParams;
   const filterParse = practiceFilterSchema.safeParse({ type: raw.type });
   const filter = filterParse.success ? filterParse.data : {};
@@ -73,15 +69,7 @@ function HeroComposition() {
   );
 }
 
-function FilterChip({
-  href,
-  label,
-  active,
-}: {
-  href: string;
-  label: string;
-  active: boolean;
-}) {
+function FilterChip({ href, label, active }: { href: string; label: string; active: boolean }) {
   return (
     <Link
       href={href}

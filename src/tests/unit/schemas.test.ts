@@ -1,9 +1,5 @@
 import { describe, it, expect } from "vitest";
-import {
-  practiceSchema,
-  yogaPracticeSchema,
-  meditationPracticeSchema,
-} from "@/lib/schemas";
+import { practiceSchema, yogaPracticeSchema, meditationPracticeSchema } from "@/lib/schemas";
 
 const baseYoga = {
   type: "yoga" as const,
@@ -18,7 +14,7 @@ const baseMeditation = {
   date: "2026-05-14T08:00:00.000Z",
   durationMin: 15,
   guidance: "recorded" as const,
-  focusObject: "breath" as const,
+  focusObjects: ["breath"] as const,
   position: "zafu" as const,
 };
 
@@ -40,11 +36,27 @@ describe("practiceSchema (discriminated union)", () => {
     expect(result.success).toBe(false);
   });
 
-  it("rejects a meditation practice without focusObject", () => {
-    const { focusObject: _omit, ...withoutFocus } = baseMeditation;
+  it("rejects a meditation practice without focusObjects", () => {
+    const { focusObjects: _omit, ...withoutFocus } = baseMeditation;
     void _omit;
     const result = meditationPracticeSchema.safeParse(withoutFocus);
     expect(result.success).toBe(false);
+  });
+
+  it("rejects a meditation practice with an empty focusObjects array", () => {
+    const result = meditationPracticeSchema.safeParse({
+      ...baseMeditation,
+      focusObjects: [],
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it("accepts a meditation practice with multiple focusObjects", () => {
+    const result = meditationPracticeSchema.safeParse({
+      ...baseMeditation,
+      focusObjects: ["breath", "mantra", "visualization"],
+    });
+    expect(result.success).toBe(true);
   });
 
   it("rejects a meditation practice without position", () => {

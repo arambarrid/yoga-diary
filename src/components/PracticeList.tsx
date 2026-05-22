@@ -9,17 +9,10 @@ export function PracticeList({ practices }: { practices: Practice[] }) {
     return (
       <Card variant="soft" padding="lg">
         <div className="flex flex-col items-center gap-5 py-8 text-center">
-          <Cloud
-            variant="large"
-            className="text-meditation-500 opacity-70"
-          />
+          <Cloud variant="large" className="text-meditation-500 opacity-70" />
           <div className="flex flex-col gap-1">
-            <p className="font-display text-display-md text-brand-primary">
-              Tu diario te espera
-            </p>
-            <p className="text-ink-600">
-              Empezá registrando tu primera práctica.
-            </p>
+            <p className="font-display text-display-md text-brand-primary">Tu diario te espera</p>
+            <p className="text-ink-600">Empezá registrando tu primera práctica.</p>
           </div>
           <Link
             href="/practices/new"

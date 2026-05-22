@@ -26,12 +26,12 @@ export function toCreateInput(input: PracticeInput): Prisma.PracticeCreateInput 
     notes: input.notes ?? null,
   };
   if (input.type === "yoga") {
-    return { ...base, yogaStyle: input.yogaStyle, focusObject: null, position: null };
+    return { ...base, yogaStyle: input.yogaStyle, focusObjects: [], position: null };
   }
   return {
     ...base,
     yogaStyle: null,
-    focusObject: input.focusObject,
+    focusObjects: input.focusObjects,
     position: input.position,
   };
 }
@@ -48,7 +48,7 @@ export function toUpdateInput(input: PracticeUpdate): Prisma.PracticeUpdateInput
     data.yogaStyle = input.yogaStyle;
   }
   if (input.type === "meditation") {
-    if (input.focusObject !== undefined) data.focusObject = input.focusObject;
+    if (input.focusObjects !== undefined) data.focusObjects = input.focusObjects;
     if (input.position !== undefined) data.position = input.position;
   }
   return data;

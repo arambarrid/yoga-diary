@@ -16,11 +16,7 @@ export function Scallop({ flip = false, className }: ScallopProps) {
       viewBox="0 0 1200 40"
       preserveAspectRatio="none"
       aria-hidden="true"
-      className={cn(
-        "block w-full h-10",
-        flip && "rotate-180",
-        className,
-      )}
+      className={cn("block w-full h-10", flip && "rotate-180", className)}
     >
       <path
         fill="currentColor"

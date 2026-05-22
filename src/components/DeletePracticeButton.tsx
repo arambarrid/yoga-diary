@@ -49,9 +49,7 @@ export function DeletePracticeButton({
       >
         {isDeleting || isPending ? "Eliminando..." : "Eliminar práctica"}
       </Button>
-      {error ? (
-        <p className="text-sm text-rose-700">{error}</p>
-      ) : null}
+      {error ? <p className="text-sm text-rose-700">{error}</p> : null}
     </div>
   );
 }

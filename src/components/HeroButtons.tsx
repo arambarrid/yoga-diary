@@ -34,26 +34,18 @@ export function HeroButtons({
   rightAlign = "outer",
   className,
 }: HeroButtonsProps) {
-  const leftAlignClass =
-    leftAlign === "center" ? "justify-center" : "justify-start pl-[12%]";
-  const rightAlignClass =
-    rightAlign === "center" ? "justify-center" : "justify-end pr-[12%]";
+  const leftAlignClass = leftAlign === "center" ? "justify-center" : "justify-start pl-[12%]";
+  const rightAlignClass = rightAlign === "center" ? "justify-center" : "justify-end pr-[12%]";
 
   return (
-    <div
-      className={cn("relative w-full mx-auto", className)}
-      style={{ aspectRatio: "7 / 5" }}
-    >
+    <div className={cn("relative w-full mx-auto", className)} style={{ aspectRatio: "7 / 5" }}>
       <Link
         href={leftHref}
         aria-label={leftLabel}
         className={cn(linkBase, "left-0", leftAlignClass)}
         style={{ background: leftBg, zIndex: 1 }}
       >
-        <span
-          className="font-display text-2xl sm:text-4xl"
-          style={{ color: leftText }}
-        >
+        <span className="font-display text-2xl sm:text-4xl" style={{ color: leftText }}>
           {leftLabel}
         </span>
       </Link>
@@ -67,10 +59,7 @@ export function HeroButtons({
           mixBlendMode: blend === "multiply" ? "multiply" : undefined,
         }}
       >
-        <span
-          className="font-display text-2xl sm:text-4xl"
-          style={{ color: rightText }}
-        >
+        <span className="font-display text-2xl sm:text-4xl" style={{ color: rightText }}>
           {rightLabel}
         </span>
       </Link>
