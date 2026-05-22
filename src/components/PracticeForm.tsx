@@ -6,21 +6,11 @@ import { Button } from "@/components/ui/Button";
 import { Field } from "@/components/ui/Field";
 import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
+import { ChipMultiSelect } from "@/components/ui/ChipMultiSelect";
 import { Textarea } from "@/components/ui/Textarea";
 import { MoodSlider } from "@/components/ui/MoodSlider";
-import {
-  focusObjectLabels,
-  guidanceLabels,
-  positionLabels,
-  yogaStyleLabels,
-} from "@/lib/labels";
-import type {
-  FocusObject,
-  Guidance,
-  Position,
-  PracticeInput,
-  YogaStyle,
-} from "@/lib/schemas";
+import { focusObjectLabels, guidanceLabels, positionLabels, yogaStyleLabels } from "@/lib/labels";
+import type { FocusObject, Guidance, Position, PracticeInput, YogaStyle } from "@/lib/schemas";
 
 type PracticeType = "yoga" | "meditation";
 
@@ -34,7 +24,7 @@ type Initial = Partial<{
   moodAfter: number | null;
   notes: string | null;
   yogaStyle: YogaStyle | null;
-  focusObject: FocusObject | null;
+  focusObjects: FocusObject[];
   position: Position | null;
 }>;
 
@@ -57,6 +47,10 @@ export function PracticeForm({ initial = {}, mode = "create" }: Props) {
 
   async function handleSubmit(formData: FormData) {
     setError(null);
+    if (type === "meditation" && formData.getAll("focusObjects").length === 0) {
+      setError("Seleccioná al menos un objeto de foco");
+      return;
+    }
     const raw = Object.fromEntries(formData.entries());
     const payload: PracticeInput =
       type === "yoga"
@@ -75,17 +69,14 @@ export function PracticeForm({ initial = {}, mode = "create" }: Props) {
             date: new Date(String(raw.date)),
             durationMin: Number(raw.durationMin),
             guidance: raw.guidance as Guidance,
-            focusObject: raw.focusObject as FocusObject,
+            focusObjects: formData.getAll("focusObjects") as FocusObject[],
             position: raw.position as Position,
             moodBefore: raw.moodBefore ? Number(raw.moodBefore) : null,
             moodAfter: raw.moodAfter ? Number(raw.moodAfter) : null,
             notes: raw.notes ? String(raw.notes) : null,
           };
 
-    const url =
-      mode === "edit" && initial.id
-        ? `/api/practices/${initial.id}`
-        : "/api/practices";
+    const url = mode === "edit" && initial.id ? `/api/practices/${initial.id}` : "/api/practices";
     const method = mode === "edit" ? "PATCH" : "POST";
 
     const res = await fetch(url, {
@@ -96,11 +87,7 @@ export function PracticeForm({ initial = {}, mode = "create" }: Props) {
 
     if (!res.ok) {
       const data = (await res.json().catch(() => ({}))) as { error?: unknown };
-      setError(
-        typeof data.error === "string"
-          ? data.error
-          : "No se pudo guardar la práctica",
-      );
+      setError(typeof data.error === "string" ? data.error : "No se pudo guardar la práctica");
       return;
     }
 
@@ -151,12 +138,7 @@ export function PracticeForm({ initial = {}, mode = "create" }: Props) {
       </div>
 
       <Field label="¿Cómo fue guiada?" htmlFor="guidance" required>
-        <Select
-          id="guidance"
-          name="guidance"
-          defaultValue={initial.guidance ?? "live"}
-          required
-        >
+        <Select id="guidance" name="guidance" defaultValue={initial.guidance ?? "live"} required>
           {Object.entries(guidanceLabels).map(([value, label]) => (
             <option key={value} value={value}>
               {label}
@@ -182,19 +164,15 @@ export function PracticeForm({ initial = {}, mode = "create" }: Props) {
         </Field>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-          <Field label="Objeto de foco" htmlFor="focusObject" required>
-            <Select
-              id="focusObject"
-              name="focusObject"
-              defaultValue={initial.focusObject ?? "breath"}
-              required
-            >
-              {Object.entries(focusObjectLabels).map(([value, label]) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </Select>
+          <Field label="Objeto de foco" required>
+            <ChipMultiSelect
+              name="focusObjects"
+              options={Object.entries(focusObjectLabels).map(([value, label]) => ({
+                value,
+                label,
+              }))}
+              defaultValue={initial.focusObjects ?? []}
+            />
           </Field>
 
           <Field label="Posición / lugar" htmlFor="position" required>
@@ -233,11 +211,7 @@ export function PracticeForm({ initial = {}, mode = "create" }: Props) {
 
           <div className="mx-auto w-full sm:w-fit text-center">
             <Field label="Después" htmlFor="moodAfter">
-              <MoodSlider
-                id="moodAfter"
-                name="moodAfter"
-                defaultValue={initial.moodAfter ?? 3}
-              />
+              <MoodSlider id="moodAfter" name="moodAfter" defaultValue={initial.moodAfter ?? 3} />
             </Field>
           </div>
         </div>
@@ -260,12 +234,7 @@ export function PracticeForm({ initial = {}, mode = "create" }: Props) {
       ) : null}
 
       <div className="flex gap-2 justify-end">
-        <Button
-          type="button"
-          variant="ghost"
-          onClick={() => router.back()}
-          disabled={isPending}
-        >
+        <Button type="button" variant="ghost" onClick={() => router.back()} disabled={isPending}>
           Cancelar
         </Button>
         <Button type="submit" disabled={isPending}>
