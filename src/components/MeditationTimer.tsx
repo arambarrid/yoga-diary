@@ -4,11 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
-import {
-  computeRemainingMs,
-  formatRemaining,
-  minutesToMs,
-} from "@/lib/timer";
+import { computeRemainingMs, formatRemaining, minutesToMs } from "@/lib/timer";
 
 const PRESET_MINUTES = [5, 10, 15, 20, 30] as const;
 const DEFAULT_MINUTES = 10;
@@ -23,9 +19,7 @@ export function MeditationTimer() {
   const [phase, setPhase] = useState<Phase>("idle");
   const [durationMin, setDurationMin] = useState<number>(DEFAULT_MINUTES);
   const [customValue, setCustomValue] = useState<string>("");
-  const [remainingMs, setRemainingMs] = useState<number>(
-    minutesToMs(DEFAULT_MINUTES),
-  );
+  const [remainingMs, setRemainingMs] = useState<number>(minutesToMs(DEFAULT_MINUTES));
 
   // Refs hold values that the render output doesn't depend on directly,
   // so updating them doesn't trigger re-renders.
@@ -36,9 +30,7 @@ export function MeditationTimer() {
     playBell();
     setPhase("finished");
     finishTimeoutRef.current = setTimeout(() => {
-      router.push(
-        `/practices/new?type=meditation&durationMin=${durationMin}`,
-      );
+      router.push(`/practices/new?type=meditation&durationMin=${durationMin}`);
     }, FINISH_REDIRECT_DELAY_MS);
   }
 
@@ -75,11 +67,7 @@ export function MeditationTimer() {
     const totalMs = minutesToMs(durationMin);
     const intervalId = setInterval(() => {
       if (startedAtRef.current === null) return;
-      const remaining = computeRemainingMs(
-        Date.now(),
-        startedAtRef.current,
-        totalMs,
-      );
+      const remaining = computeRemainingMs(Date.now(), startedAtRef.current, totalMs);
       setRemainingMs(remaining);
       if (remaining <= 0) {
         clearInterval(intervalId);
@@ -102,9 +90,7 @@ export function MeditationTimer() {
   if (phase === "running") {
     return (
       <div className="flex flex-col items-center gap-8 py-12">
-        <p className="text-sm uppercase tracking-wider text-stone-500">
-          En sesión
-        </p>
+        <p className="text-sm uppercase tracking-wider text-stone-500">En sesión</p>
         <div className="text-7xl font-light tabular-nums text-stone-900">
           {formatRemaining(remainingMs)}
         </div>
@@ -119,9 +105,7 @@ export function MeditationTimer() {
     return (
       <div className="flex flex-col items-center gap-4 py-12">
         <p className="text-2xl font-medium text-stone-900">Sesión completa</p>
-        <p className="text-sm text-stone-500">
-          Te llevamos al registro en un instante...
-        </p>
+        <p className="text-sm text-stone-500">Te llevamos al registro en un instante...</p>
       </div>
     );
   }
@@ -129,9 +113,7 @@ export function MeditationTimer() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h2 className="text-lg font-medium text-stone-800">
-          ¿Cuánto vas a meditar?
-        </h2>
+        <h2 className="text-lg font-medium text-stone-800">¿Cuánto vas a meditar?</h2>
         <p className="text-sm text-stone-600 mt-1">
           Elegí un preset o ingresá una duración custom (1 a 180 minutos).
         </p>
@@ -158,10 +140,7 @@ export function MeditationTimer() {
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <label
-          htmlFor="custom-duration"
-          className="text-sm font-medium text-stone-800"
-        >
+        <label htmlFor="custom-duration" className="text-sm font-medium text-stone-800">
           Custom
         </label>
         <Input
@@ -177,11 +156,7 @@ export function MeditationTimer() {
       </div>
 
       <div className="pt-2">
-        <Button
-          type="button"
-          onClick={handleStart}
-          disabled={durationMin <= 0}
-        >
+        <Button type="button" onClick={handleStart} disabled={durationMin <= 0}>
           Empezar — {durationMin} min
         </Button>
       </div>

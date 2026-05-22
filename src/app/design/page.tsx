@@ -118,12 +118,10 @@ export default function DesignPage() {
   return (
     <div className="flex flex-col gap-16 pb-24">
       <section className="flex flex-col gap-4">
-        <h1 className="font-display text-display-2xl text-brand-primary">
-          design
-        </h1>
+        <h1 className="font-display text-display-2xl text-brand-primary">design</h1>
         <p className="text-ink-600 max-w-xl">
-          Sistema de diseño de Caleidoscopio — paleta, tipografía, primitivos,
-          decoraciones y combinaciones del hero. Solo visible en development.
+          Sistema de diseño de Caleidoscopio — paleta, tipografía, primitivos, decoraciones y
+          combinaciones del hero. Solo visible en development.
         </p>
       </section>
 
@@ -144,12 +142,8 @@ export default function DesignPage() {
       <section className="flex flex-col gap-4">
         <h2 className="font-display text-display-lg">tipografía</h2>
         <div className="flex flex-col gap-2">
-          <p className="font-display text-display-2xl text-brand-primary">
-            display 2xl
-          </p>
-          <p className="font-display text-display-xl text-brand-primary">
-            display xl
-          </p>
+          <p className="font-display text-display-2xl text-brand-primary">display 2xl</p>
+          <p className="font-display text-display-xl text-brand-primary">display xl</p>
           <p className="font-display text-display-lg">display lg</p>
           <p className="font-display text-display-md">display md</p>
           <p className="text-lg">body large — Inter para texto extendido.</p>
@@ -189,9 +183,15 @@ export default function DesignPage() {
           <Badge variant="action">acción</Badge>
         </div>
         <div className="flex flex-wrap gap-3 items-center">
-          <Badge variant="yoga" size="sm">sm</Badge>
-          <Badge variant="yoga" size="md">md</Badge>
-          <Badge variant="yoga" size="lg">lg</Badge>
+          <Badge variant="yoga" size="sm">
+            sm
+          </Badge>
+          <Badge variant="yoga" size="md">
+            md
+          </Badge>
+          <Badge variant="yoga" size="lg">
+            lg
+          </Badge>
         </div>
       </section>
 
@@ -222,9 +222,7 @@ export default function DesignPage() {
           </Card>
           <Card variant="yoga">
             <h3 className="font-display text-display-md mb-2">Card yoga</h3>
-            <p className="text-ink-900/80">
-              Lila sólido. Mismo patrón que la meditation card.
-            </p>
+            <p className="text-ink-900/80">Lila sólido. Mismo patrón que la meditation card.</p>
           </Card>
           <Card variant="white" interactive>
             <h3 className="font-display text-display-md mb-2">Card interactive</h3>
@@ -240,11 +238,7 @@ export default function DesignPage() {
             <Field label="Nombre" htmlFor="demo-name" required>
               <Input id="demo-name" placeholder="Tu nombre" />
             </Field>
-            <Field
-              label="Tipo de práctica"
-              htmlFor="demo-type"
-              hint="Yoga o meditación."
-            >
+            <Field label="Tipo de práctica" htmlFor="demo-type" hint="Yoga o meditación.">
               <Select id="demo-type">
                 <option value="yoga">Yoga</option>
                 <option value="meditation">Meditación</option>
@@ -289,18 +283,16 @@ export default function DesignPage() {
       <section className="flex flex-col gap-4">
         <h2 className="font-display text-display-lg">marquee</h2>
         <div className="bg-meditation-100 text-meditation-700 rounded-2xl">
-          <Marquee
-            items={["respirá", "presente", "ahora", "respirá", "presente", "ahora"]}
-          />
+          <Marquee items={["respirá", "presente", "ahora", "respirá", "presente", "ahora"]} />
         </div>
       </section>
 
       <section className="flex flex-col gap-4">
         <h2 className="font-display text-display-lg">hero — botones</h2>
         <p className="text-sm text-ink-600 max-w-xl">
-          Combinaciones de paleta para el par de botones del home. Cada bloque
-          es clickeable (lleva a /practices/new o /meditate). La combinación
-          marcada como &quot;actual&quot; es la que está en uso.
+          Combinaciones de paleta para el par de botones del home. Cada bloque es clickeable (lleva
+          a /practices/new o /meditate). La combinación marcada como &quot;actual&quot; es la que
+          está en uso.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-10">
           {HERO_COMBOS.map((combo, i) => (
@@ -310,9 +302,7 @@ export default function DesignPage() {
                 <p className="text-sm font-mono text-ink-900">
                   {i + 1}. {combo.leftToken} × {combo.rightToken}
                 </p>
-                {combo.note && (
-                  <p className="text-xs text-ink-600">{combo.note}</p>
-                )}
+                {combo.note && <p className="text-xs text-ink-600">{combo.note}</p>}
               </div>
             </div>
           ))}
@@ -324,9 +314,7 @@ export default function DesignPage() {
 
 function Swatch({ name, className }: { name: string; className: string }) {
   return (
-    <div
-      className={`rounded-xl p-4 h-24 flex flex-col justify-end shadow-soft ${className}`}
-    >
+    <div className={`rounded-xl p-4 h-24 flex flex-col justify-end shadow-soft ${className}`}>
       <span className="font-mono text-xs">{name}</span>
     </div>
   );

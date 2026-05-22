@@ -50,18 +50,18 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Scripts
 
-| Command                | What it does                                |
-| ---------------------- | ------------------------------------------- |
-| `npm run dev`          | Start the dev server                        |
-| `npm run build`        | Production build                            |
-| `npm run lint`         | ESLint                                      |
-| `npm run typecheck`    | `tsc --noEmit`                              |
-| `npm run format`       | Format with Prettier                        |
-| `npm test`             | Unit tests (Vitest, watch mode)             |
-| `npm test -- --run`    | Unit tests in CI mode                       |
-| `npm run test:e2e`     | E2E tests (Playwright, starts the dev server) |
-| `npm run db:migrate`   | Create/apply Prisma migrations              |
-| `npm run db:studio`    | Open Prisma Studio                          |
+| Command              | What it does                                  |
+| -------------------- | --------------------------------------------- |
+| `npm run dev`        | Start the dev server                          |
+| `npm run build`      | Production build                              |
+| `npm run lint`       | ESLint                                        |
+| `npm run typecheck`  | `tsc --noEmit`                                |
+| `npm run format`     | Format with Prettier                          |
+| `npm test`           | Unit tests (Vitest, watch mode)               |
+| `npm test -- --run`  | Unit tests in CI mode                         |
+| `npm run test:e2e`   | E2E tests (Playwright, starts the dev server) |
+| `npm run db:migrate` | Create/apply Prisma migrations                |
+| `npm run db:studio`  | Open Prisma Studio                            |
 
 ## Domain model
 
@@ -79,7 +79,7 @@ A single `Practice` entity with a `type` field ('yoga' \| 'meditation') and opti
 - **Postgres via Neon** for both local dev and production: serverless, free tier, supports database branching per environment. Connection string is portable to any Postgres host.
 - **Strict TypeScript** with `noUncheckedIndexedAccess` as a visible quality signal.
 - **PR workflow** even as a solo project: each feature on its own branch, PR against `main`, CI runs everything, squash-merge.
-- **Hero pivot — from SVG kaleidoscope to two overlapping circles**: typed Bézier path iteration on the original dihedral SVG plateaued before reaching the desired hand-drawn feel, and the WebGL reference that inspired it was out of scope for the MVP. The replacement (`HeroButtons`) is two flat circles with `z-index` overlap and explicit `aria-label`s that contain the visible text (WCAG 2.5.3 *Label in Name*). Less expressive but predictable and shippable.
+- **Hero pivot — from SVG kaleidoscope to two overlapping circles**: typed Bézier path iteration on the original dihedral SVG plateaued before reaching the desired hand-drawn feel, and the WebGL reference that inspired it was out of scope for the MVP. The replacement (`HeroButtons`) is two flat circles with `z-index` overlap and explicit `aria-label`s that contain the visible text (WCAG 2.5.3 _Label in Name_). Less expressive but predictable and shippable.
 - **Design system gated to development**: the `/design` route renders palette, typography, components and hero color combinations, but calls `notFound()` when `NODE_ENV !== "development"`. Keeps the internal reference page out of production without losing it as a tool for future iteration.
 
 ## Roadmap

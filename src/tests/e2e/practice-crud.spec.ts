@@ -48,9 +48,7 @@ test("create, edit and delete a yoga practice through the UI", async ({ page }) 
   await expect(page.locator("a", { hasText: marker })).toHaveCount(0);
 });
 
-test("create a meditation practice with focus object and position", async ({
-  page,
-}) => {
+test("create a meditation practice with focus object and position", async ({ page }) => {
   const marker = `E2E_MEDITATION_${Date.now()}`;
 
   await page.goto("/practices/new");

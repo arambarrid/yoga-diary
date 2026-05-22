@@ -26,8 +26,7 @@ const cardVariants = cva("rounded-2xl shadow-soft transition-shadow", {
   defaultVariants: { variant: "white", padding: "md", interactive: false },
 });
 
-export type CardProps = HTMLAttributes<HTMLDivElement> &
-  VariantProps<typeof cardVariants>;
+export type CardProps = HTMLAttributes<HTMLDivElement> & VariantProps<typeof cardVariants>;
 
 export const Card = forwardRef<HTMLDivElement, CardProps>(function Card(
   { variant, padding, interactive, className, ...props },
@@ -36,10 +35,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(function Card(
   return (
     <div
       ref={ref}
-      className={cn(
-        cardVariants({ variant, padding, interactive }),
-        className,
-      )}
+      className={cn(cardVariants({ variant, padding, interactive }), className)}
       {...props}
     />
   );

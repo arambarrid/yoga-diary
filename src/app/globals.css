@@ -2,50 +2,50 @@
 
 @theme {
   /* Brand palette */
-  --color-brand-primary: #8B6FE8;
-  --color-brand-secondary: #6B4FD6;
+  --color-brand-primary: #8b6fe8;
+  --color-brand-secondary: #6b4fd6;
 
   /* Action / CTA */
-  --color-action: #FE6132;
-  --color-action-hover: #E5491A;
+  --color-action: #fe6132;
+  --color-action-hover: #e5491a;
 
   /* Surfaces */
-  --color-surface-cream: #FFF8F2;
-  --color-surface-white: #FFFFFF;
-  --color-surface-soft: #F4EEF8;
+  --color-surface-cream: #fff8f2;
+  --color-surface-white: #ffffff;
+  --color-surface-soft: #f4eef8;
 
   /* Yoga accent (soft lilac lavender — feminine, contemplative) */
-  --color-yoga-50: #F4F0FE;
-  --color-yoga-100: #E6DEFC;
-  --color-yoga-500: #B9A7F5;
-  --color-yoga-700: #5E4DB8;
+  --color-yoga-50: #f4f0fe;
+  --color-yoga-100: #e6defc;
+  --color-yoga-500: #b9a7f5;
+  --color-yoga-700: #5e4db8;
 
   /* Meditation accent (tropical teal — breath, water) */
-  --color-meditation-50: #F0F8F8;
-  --color-meditation-100: #D8ECEE;
-  --color-meditation-500: #5CA8AD;
-  --color-meditation-700: #2E6A6E;
+  --color-meditation-50: #f0f8f8;
+  --color-meditation-100: #d8ecee;
+  --color-meditation-500: #5ca8ad;
+  --color-meditation-700: #2e6a6e;
 
   /* Tertiary warm (soft blossom — gentle accent) */
-  --color-warm: #FABDCD;
-  --color-warm-soft: #FDE5EC;
+  --color-warm: #fabdcd;
+  --color-warm-soft: #fde5ec;
 
   /* Decorative vibrant pink — for sparkles, hero accents */
-  --color-pink-vivid: #F993E9;
+  --color-pink-vivid: #f993e9;
 
   /* Ink (text on cream) */
-  --color-ink-900: #1A0B2E;
-  --color-ink-600: #5D4E7B;
-  --color-ink-400: #9690A8;
+  --color-ink-900: #1a0b2e;
+  --color-ink-600: #5d4e7b;
+  --color-ink-400: #9690a8;
 
   /* Typography */
   --font-display: var(--font-bricolage), system-ui, sans-serif;
   --font-sans: var(--font-inter), system-ui, sans-serif;
 
   /* Hero composition palette (sage + lavanda + ink contour) */
-  --color-hero-sage: #C3D4B5;
-  --color-hero-lavender: #D6CBE3;
-  --color-hero-contour: #3F3D56;
+  --color-hero-sage: #c3d4b5;
+  --color-hero-lavender: #d6cbe3;
+  --color-hero-contour: #3f3d56;
 
   --text-display-2xl: 5rem;
   --text-display-2xl--line-height: 0.95;
@@ -75,13 +75,21 @@
 }
 
 @keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 @keyframes spin-slow {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 body {
@@ -101,58 +109,50 @@ body {
   }
 }
 
-  .mood-slider {
-    appearance: none;
-    background: transparent;
-    cursor: pointer;
-    height: 16px;
-  }
+.mood-slider {
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+  height: 16px;
+}
 
-  .mood-slider::-webkit-slider-runnable-track {
-    height: 6px;
-    background: linear-gradient(
-      to right,
-      #D6D3D1,
-      var(--color-meditation-500)
-    );
-    border-radius: 9999px;
-  }
+.mood-slider::-webkit-slider-runnable-track {
+  height: 6px;
+  background: linear-gradient(to right, #d6d3d1, var(--color-meditation-500));
+  border-radius: 9999px;
+}
 
-  .mood-slider::-webkit-slider-thumb {
-    appearance: none;
-    -webkit-appearance: none;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: color-mix(
-      in srgb,
-      #D6D3D1 calc((5 - var(--value, 3)) * 25%),
-      var(--color-meditation-500)
-    );
-    margin-top: -5px;
-    cursor: grab;
-  }
+.mood-slider::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: color-mix(
+    in srgb,
+    #d6d3d1 calc((5 - var(--value, 3)) * 25%),
+    var(--color-meditation-500)
+  );
+  margin-top: -5px;
+  cursor: grab;
+}
 
-  .mood-slider::-moz-range-track {
-    height: 6px;
-    background: linear-gradient(
-      to right,
-      #D6D3D1,
-      var(--color-meditation-500)
-    );
-    border-radius: 9999px;
-    border: none;
-  }
+.mood-slider::-moz-range-track {
+  height: 6px;
+  background: linear-gradient(to right, #d6d3d1, var(--color-meditation-500));
+  border-radius: 9999px;
+  border: none;
+}
 
-  .mood-slider::-moz-range-thumb {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: color-mix(
-      in srgb,
-      #D6D3D1 calc((5 - var(--value, 3)) * 25%),
-      var(--color-meditation-500)
-    );
-    border: none;
-    cursor: grab;
-  }
+.mood-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: color-mix(
+    in srgb,
+    #d6d3d1 calc((5 - var(--value, 3)) * 25%),
+    var(--color-meditation-500)
+  );
+  border: none;
+  cursor: grab;
+}
