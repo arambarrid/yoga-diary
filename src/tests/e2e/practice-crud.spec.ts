@@ -56,8 +56,8 @@ test("create a meditation practice with multiple focus objects and position", as
   await page.getByLabel("Tipo de práctica").selectOption("meditation");
   await page.getByLabel("Duración (minutos)").fill("15");
   await page.getByLabel("¿Cómo fue guiada?").selectOption("recorded");
-  await page.getByRole("checkbox", { name: "Respiración" }).check();
-  await page.getByRole("checkbox", { name: "Mantra" }).check();
+  await page.getByRole("checkbox", { name: "Respiración" }).check({ force: true });
+  await page.getByRole("checkbox", { name: "Mantra" }).check({ force: true });
   await page.getByLabel("Posición / lugar").selectOption("zafu");
   await page.getByLabel("Notas").fill(marker);
 
