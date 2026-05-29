@@ -67,55 +67,45 @@ export default async function StatsPage({
     from: range.from,
     to: range.to,
   });
-  const total = summary.byType.yoga + summary.byType.meditation;
 
+  // Always render the full layout. Sections that have nothing to show
+  // (DistributionSection, MoodDeltaSection) return null on their own;
+  // ByTypeSection and BucketSection happily render zeros — consistent
+  // with the "Esta semana / Aún sin registrar" pattern, and aligned with
+  // the no-guilt principle that 0 is just a number, not a reproach.
   return (
     <div className="flex flex-col gap-8">
       <PageHeader />
       <RangeFilter active={range.key} tz={raw.tz} />
-
-      {total === 0 ? (
-        <Card variant="soft" padding="lg">
-          <p className="text-ink-600">
-            Sin prácticas registradas en este período. Cuando registres alguna,
-            los números aparecen acá.
-          </p>
-        </Card>
-      ) : (
-        <>
-          <ByTypeSection summary={summary} />
-          <BucketSection
-            heading="Por semana"
-            buckets={summary.byWeek}
-            tz={raw.tz}
-            granularity="week"
-          />
-          <BucketSection
-            heading="Por mes"
-            buckets={summary.byMonth}
-            tz={raw.tz}
-            granularity="month"
-          />
-          <DistributionSection
-            heading="Distribución por estilo de yoga"
-            items={summary.yogaStyleDistribution.map((s) => ({
-              label:
-                yogaStyleLabels[s.yogaStyle as YogaStyle] ?? s.yogaStyle,
-              count: s.count,
-            }))}
-          />
-          <DistributionSection
-            heading="Distribución por objeto de meditación"
-            items={summary.focusObjectDistribution.map((f) => ({
-              label:
-                focusObjectLabels[f.focusObject as FocusObject] ??
-                f.focusObject,
-              count: f.count,
-            }))}
-          />
-          <MoodDeltaSection summary={summary} />
-        </>
-      )}
+      <ByTypeSection summary={summary} />
+      <BucketSection
+        heading="Por semana"
+        buckets={summary.byWeek}
+        tz={raw.tz}
+        granularity="week"
+      />
+      <BucketSection
+        heading="Por mes"
+        buckets={summary.byMonth}
+        tz={raw.tz}
+        granularity="month"
+      />
+      <DistributionSection
+        heading="Distribución por estilo de yoga"
+        items={summary.yogaStyleDistribution.map((s) => ({
+          label: yogaStyleLabels[s.yogaStyle as YogaStyle] ?? s.yogaStyle,
+          count: s.count,
+        }))}
+      />
+      <DistributionSection
+        heading="Distribución por objeto de meditación"
+        items={summary.focusObjectDistribution.map((f) => ({
+          label:
+            focusObjectLabels[f.focusObject as FocusObject] ?? f.focusObject,
+          count: f.count,
+        }))}
+      />
+      <MoodDeltaSection summary={summary} />
     </div>
   );
 }
