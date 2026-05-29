@@ -14,6 +14,14 @@ export function Nav() {
             Caleidoscopio
           </span>
         </Link>
+        <nav className="flex items-center gap-4">
+          <Link
+            href="/stats"
+            className="text-sm font-medium text-ink-600 hover:text-brand-primary transition-colors"
+          >
+            Estadísticas
+          </Link>
+        </nav>
       </div>
     </header>
   );
