@@ -1,13 +1,11 @@
 import Link from "next/link";
-import { startOfMonth, startOfWeek } from "date-fns";
-import { fromZonedTime, toZonedTime } from "date-fns-tz";
 import { Card } from "@/components/ui/Card";
 import { TzGuard } from "@/components/stats/TzGuard";
-import {
-  getPracticeSummary,
-  type PracticeBucket,
-  type PracticeSummary,
-} from "@/lib/practice";
+import { DurationChart } from "@/components/stats/charts/DurationChart";
+import { FrequencyChart } from "@/components/stats/charts/FrequencyChart";
+import { TypeDistributionChart } from "@/components/stats/charts/TypeDistributionChart";
+import { getPracticeSummary, type PracticeSummary } from "@/lib/practice";
+import { buildWeeklySeries } from "@/lib/stats-series";
 import {
   focusObjectLabels,
   practiceTypeLabels,
@@ -16,7 +14,9 @@ import {
 import type { FocusObject, YogaStyle } from "@/lib/schemas";
 import { cn } from "@/lib/utils";
 
-// Issue #9 — phase 1: numbers-only skeleton. Charts arrive in phase 2.
+// Issue #9 — phase 2: charts via Recharts + ranked bar lists for
+// distributions. The page itself stays a server component; the chart
+// children are client components that receive plain data via props.
 
 type RangeKey = "30" | "90" | "all";
 const RANGE_LABELS: Record<RangeKey, string> = {
@@ -49,8 +49,7 @@ export default async function StatsPage({
   const raw = await searchParams;
 
   // Wait for TzGuard to populate `?tz=` before doing any TZ-sensitive
-  // bucketing. Avoids a flash of UTC-bucketed numbers that may shift at week
-  // or month boundaries.
+  // bucketing.
   if (!raw.tz) {
     return (
       <div className="flex flex-col gap-6">
@@ -67,44 +66,50 @@ export default async function StatsPage({
     from: range.from,
     to: range.to,
   });
+  const weeklySeries = buildWeeklySeries({
+    buckets: summary.byWeek,
+    tz: raw.tz,
+    from: range.from,
+  });
+  const yogaStyles = summary.yogaStyleDistribution.map((s) => ({
+    label: yogaStyleLabels[s.yogaStyle as YogaStyle] ?? s.yogaStyle,
+    count: s.count,
+  }));
+  const focusObjects = summary.focusObjectDistribution.map((f) => ({
+    label: focusObjectLabels[f.focusObject as FocusObject] ?? f.focusObject,
+    count: f.count,
+  }));
 
-  // Always render the full layout. Sections that have nothing to show
-  // (DistributionSection, MoodDeltaSection) return null on their own;
-  // ByTypeSection and BucketSection happily render zeros — consistent
-  // with the "Esta semana / Aún sin registrar" pattern, and aligned with
-  // the no-guilt principle that 0 is just a number, not a reproach.
   return (
     <div className="flex flex-col gap-8">
       <PageHeader />
       <RangeFilter active={range.key} tz={raw.tz} />
       <ByTypeSection summary={summary} />
-      <BucketSection
-        heading="Por semana"
-        buckets={summary.byWeek}
-        tz={raw.tz}
-        granularity="week"
-      />
-      <BucketSection
-        heading="Por mes"
-        buckets={summary.byMonth}
-        tz={raw.tz}
-        granularity="month"
-      />
-      <DistributionSection
-        heading="Distribución por estilo de yoga"
-        items={summary.yogaStyleDistribution.map((s) => ({
-          label: yogaStyleLabels[s.yogaStyle as YogaStyle] ?? s.yogaStyle,
-          count: s.count,
-        }))}
-      />
-      <DistributionSection
-        heading="Distribución por objeto de meditación"
-        items={summary.focusObjectDistribution.map((f) => ({
-          label:
-            focusObjectLabels[f.focusObject as FocusObject] ?? f.focusObject,
-          count: f.count,
-        }))}
-      />
+
+      <section className="flex flex-col gap-3">
+        <SectionHeading>Tendencia semanal</SectionHeading>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <ChartCard caption="Sesiones por semana">
+            <FrequencyChart data={weeklySeries} />
+          </ChartCard>
+          <ChartCard caption="Minutos por semana">
+            <DurationChart data={weeklySeries} />
+          </ChartCard>
+        </div>
+      </section>
+
+      {(yogaStyles.length > 0 || focusObjects.length > 0) && (
+        <section className="flex flex-col gap-3">
+          <SectionHeading>Distribución</SectionHeading>
+          <Card variant="soft" padding="md">
+            <TypeDistributionChart
+              yogaStyles={yogaStyles}
+              focusObjects={focusObjects}
+            />
+          </Card>
+        </section>
+      )}
+
       <MoodDeltaSection summary={summary} />
     </div>
   );
@@ -116,16 +121,12 @@ function PageHeader() {
       <h1 className="font-display text-display-lg text-brand-primary leading-none">
         Estadísticas
       </h1>
-      <p className="text-ink-600 mt-1">
-        Tu práctica en números. Los gráficos llegan en la próxima iteración.
-      </p>
+      <p className="text-ink-600 mt-1">Tu práctica en números.</p>
     </header>
   );
 }
 
 function RangeFilter({ active, tz }: { active: RangeKey; tz: string }) {
-  // Build hrefs that preserve the resolved tz so the chip click doesn't
-  // bounce through the TzGuard placeholder again.
   const keys: RangeKey[] = ["30", "90", "all"];
   return (
     <div
@@ -173,11 +174,28 @@ function SectionHeading({
   );
 }
 
+function ChartCard({
+  caption,
+  children,
+}: {
+  caption: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <Card variant="soft" padding="md">
+      <p className="text-xs uppercase tracking-wider text-ink-600 mb-2">
+        {caption}
+      </p>
+      {children}
+    </Card>
+  );
+}
+
 function ByTypeSection({ summary }: { summary: PracticeSummary }) {
   return (
     <section className="flex flex-col gap-3">
       <SectionHeading>Resumen</SectionHeading>
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-3 max-w-2xl">
         <NumberCard
           label={practiceTypeLabels.yoga}
           value={summary.byType.yoga}
@@ -220,154 +238,6 @@ function NumberCard({
   );
 }
 
-function BucketSection({
-  heading,
-  buckets,
-  tz,
-  granularity,
-}: {
-  heading: string;
-  buckets: PracticeBucket[];
-  tz: string;
-  granularity: "week" | "month";
-}) {
-  // Aggregate by bucketStart across types so the list reads chronologically.
-  const grouped = new Map<
-    string,
-    { bucketStart: Date; yoga: number; meditation: number; totalMin: number }
-  >();
-  for (const b of buckets) {
-    const key = b.bucketStart.toISOString();
-    const entry = grouped.get(key) ?? {
-      bucketStart: b.bucketStart,
-      yoga: 0,
-      meditation: 0,
-      totalMin: 0,
-    };
-    entry[b.type] += b.count;
-    entry.totalMin += b.totalMin;
-    grouped.set(key, entry);
-  }
-
-  // Always surface the current period — even with zero practices — so the
-  // user can see where they are right now. Tone stays neutral / inviting
-  // (no streaks, no guilt).
-  const currentStart = currentBucketStart(granularity, tz);
-  const currentKey = currentStart.toISOString();
-  if (!grouped.has(currentKey)) {
-    grouped.set(currentKey, {
-      bucketStart: currentStart,
-      yoga: 0,
-      meditation: 0,
-      totalMin: 0,
-    });
-  }
-
-  const rows = Array.from(grouped.values()).sort(
-    (a, b) => b.bucketStart.getTime() - a.bucketStart.getTime(),
-  );
-
-  return (
-    <section className="flex flex-col gap-3">
-      <SectionHeading>{heading}</SectionHeading>
-      <Card variant="soft" padding="md">
-        <ul className="divide-y divide-ink-400/10">
-          {rows.map((r) => {
-            const isCurrent = r.bucketStart.toISOString() === currentKey;
-            const isEmpty = r.yoga === 0 && r.meditation === 0;
-            return (
-              <li
-                key={r.bucketStart.toISOString()}
-                className="py-3 flex items-baseline justify-between gap-3"
-              >
-                <span className="text-sm font-medium text-ink-900">
-                  {isCurrent
-                    ? granularity === "week"
-                      ? "Esta semana"
-                      : "Este mes"
-                    : formatBucket(r.bucketStart, tz, granularity)}
-                </span>
-                {isEmpty ? (
-                  <span className="text-sm text-ink-600 italic">
-                    Aún sin registrar
-                  </span>
-                ) : (
-                  <span className="text-sm text-ink-600 tabular-nums">
-                    {r.yoga > 0 && <>🤸 {r.yoga} </>}
-                    {r.meditation > 0 && <>🧘 {r.meditation} </>}
-                    <span className="ml-2">· {r.totalMin} min</span>
-                  </span>
-                )}
-              </li>
-            );
-          })}
-        </ul>
-      </Card>
-    </section>
-  );
-}
-
-// Start of the current week (Monday) or month, expressed as a UTC instant
-// of midnight in the user's zone — matches the bucket keys produced by
-// summarizePractices().
-function currentBucketStart(granularity: "week" | "month", tz: string): Date {
-  const zoned = toZonedTime(new Date(), tz);
-  const start =
-    granularity === "week"
-      ? startOfWeek(zoned, { weekStartsOn: 1 })
-      : startOfMonth(zoned);
-  return fromZonedTime(start, tz);
-}
-
-function formatBucket(
-  bucketStart: Date,
-  tz: string,
-  granularity: "week" | "month",
-): string {
-  if (granularity === "month") {
-    return new Intl.DateTimeFormat("es-AR", {
-      month: "long",
-      year: "numeric",
-      timeZone: tz,
-    }).format(bucketStart);
-  }
-  return `Semana del ${new Intl.DateTimeFormat("es-AR", {
-    day: "numeric",
-    month: "short",
-    timeZone: tz,
-  }).format(bucketStart)}`;
-}
-
-function DistributionSection({
-  heading,
-  items,
-}: {
-  heading: string;
-  items: Array<{ label: string; count: number }>;
-}) {
-  if (items.length === 0) return null;
-  return (
-    <section className="flex flex-col gap-3">
-      <SectionHeading>{heading}</SectionHeading>
-      <Card variant="soft" padding="md">
-        <ul className="divide-y divide-ink-400/10">
-          {items.map((it) => (
-            <li
-              key={it.label}
-              className="py-2 flex items-baseline justify-between gap-3"
-            >
-              <span className="text-sm text-ink-900">{it.label}</span>
-              <span className="text-sm text-ink-600 tabular-nums">
-                {it.count}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </Card>
-    </section>
-  );
-}
-
 function MoodDeltaSection({ summary }: { summary: PracticeSummary }) {
   const { yoga, meditation } = summary.moodDeltaByType;
   if (yoga === null && meditation === null) return null;
@@ -376,7 +246,7 @@ function MoodDeltaSection({ summary }: { summary: PracticeSummary }) {
       <SectionHeading note="Cambio promedio de mood (después − antes).">
         Mood delta
       </SectionHeading>
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-3 max-w-2xl">
         <NumberCard
           label={practiceTypeLabels.yoga}
           value={yoga === null ? "—" : formatDelta(yoga)}

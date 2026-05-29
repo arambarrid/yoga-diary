@@ -24,6 +24,10 @@ test("stats page reflects new practices and preserves tz across range filters", 
   const baseline = Number(((await yogaCount.textContent()) ?? "0").trim());
   expect(Number.isFinite(baseline)).toBe(true);
 
+  // Both Recharts charts (Frequency + Duration) render their SVG surface
+  // even on empty data — the weekly series fills the range with zero bars.
+  await expect(page.locator(".recharts-wrapper")).toHaveCount(2);
+
   // --- Create one yoga practice through the UI ---
   await page.goto("/practices/new");
   await page.getByLabel("Tipo de práctica").selectOption("yoga");
@@ -40,6 +44,8 @@ test("stats page reflects new practices and preserves tz across range filters", 
   await expect(page.getByTestId("stats-count-yoga")).toHaveText(
     String(baseline + 1),
   );
+  // Charts still render with dense data.
+  await expect(page.locator(".recharts-wrapper")).toHaveCount(2);
 
   // --- Range filter: tz is preserved on each chip click ---
   // 90 días: adds `range=90`, keeps `tz=`.
