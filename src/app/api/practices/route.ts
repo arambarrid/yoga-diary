@@ -1,4 +1,5 @@
 import type { NextRequest } from "next/server";
+import { revalidatePath } from "next/cache";
 import { ZodError } from "zod";
 import { practiceSchema } from "@/lib/schemas";
 import { createPractice, listPractices, practiceFilterSchema } from "@/lib/practice";
@@ -30,6 +31,10 @@ export async function POST(request: NextRequest) {
   }
   try {
     const practice = await createPractice(parsed.data);
+    // The /diary summary is statically rendered; invalidate it so a new
+    // practice shows up there. The other diary pages read searchParams and
+    // are already dynamic.
+    revalidatePath("/diary");
     return Response.json({ practice }, { status: 201 });
   } catch (err) {
     if (err instanceof ZodError) {
