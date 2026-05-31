@@ -12,6 +12,7 @@ const make = (overrides: Partial<Practice> = {}): Practice => ({
   date: new Date("2026-01-15T12:00:00Z"),
   durationMin: 30,
   guidance: "self",
+  teacher: null,
   moodBefore: null,
   moodAfter: null,
   notes: null,

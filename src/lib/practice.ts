@@ -23,6 +23,7 @@ export function toCreateInput(input: PracticeInput): Prisma.PracticeCreateInput 
     date: input.date,
     durationMin: input.durationMin,
     guidance: input.guidance,
+    teacher: input.guidance === "self" ? null : (input.teacher ?? null),
     moodBefore: input.moodBefore ?? null,
     moodAfter: input.moodAfter ?? null,
     notes: input.notes ?? null,
@@ -50,6 +51,12 @@ export function toUpdateInput(input: PracticeUpdate): Prisma.PracticeUpdateInput
   if (input.date !== undefined) data.date = input.date;
   if (input.durationMin !== undefined) data.durationMin = input.durationMin;
   if (input.guidance !== undefined) data.guidance = input.guidance;
+  // A self-guided practice has no teacher; otherwise persist the provided one.
+  if (input.guidance === "self") {
+    data.teacher = null;
+  } else if (input.teacher !== undefined) {
+    data.teacher = input.teacher ?? null;
+  }
   if (input.moodBefore !== undefined) data.moodBefore = input.moodBefore;
   if (input.moodAfter !== undefined) data.moodAfter = input.moodAfter;
   if (input.notes !== undefined) data.notes = input.notes;
@@ -111,6 +118,27 @@ export async function listYogaStyleCustoms(): Promise<string[]> {
     if (seen.has(key)) continue;
     seen.add(key);
     result.push(yogaStyleCustom);
+  }
+  return result;
+}
+
+// Distinct teacher/guide names previously entered, for the form dropdown.
+// De-duplicated case-insensitively; original casing preserved (first
+// occurrence wins, ordered alphabetically).
+export async function listTeachers(): Promise<string[]> {
+  const rows = await prisma.practice.findMany({
+    where: { teacher: { not: null } },
+    select: { teacher: true },
+    orderBy: { teacher: "asc" },
+  });
+  const seen = new Set<string>();
+  const result: string[] = [];
+  for (const { teacher } of rows) {
+    if (!teacher) continue;
+    const key = teacher.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    result.push(teacher);
   }
   return result;
 }

@@ -46,6 +46,7 @@ export function PracticeCard({ practice }: { practice: Practice }) {
             </p>
             <p className="text-sm text-ink-600">
               {guidanceLabels[practice.guidance as Guidance]}
+              {practice.teacher ? ` · con ${practice.teacher}` : null}
               {specifics ? ` · ${specifics}` : null}
             </p>
           </div>

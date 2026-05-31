@@ -146,3 +146,48 @@ test("reuse a previously-saved custom yoga style from the dropdown", async ({ pa
     await expect(page).toHaveURL("/diary/practices");
   }
 });
+
+test("add a guide to a guided practice and reuse it from the dropdown", async ({ page }) => {
+  const stamp = Date.now();
+  const teacher = `Lu ${stamp}`;
+  const markerA = `E2E_TEACHER_A_${stamp}`;
+  const markerB = `E2E_TEACHER_B_${stamp}`;
+
+  // First: create a guided practice with a brand-new guide via "Otra persona…".
+  await page.goto("/practices/new");
+  await page.getByLabel("Tipo de práctica").selectOption("yoga");
+  await page.getByLabel("Duración (minutos)").fill("60");
+  await page.getByLabel("¿Cómo fue guiada?").selectOption("live");
+  await page.getByLabel("Guía").selectOption("__new__");
+  await page.getByLabel("Nombre de la guía").fill(teacher);
+  await page.getByLabel("Notas").fill(markerA);
+  await page.getByRole("button", { name: "Crear práctica" }).click();
+  await expect(page).toHaveURL("/diary/practices");
+
+  const cardA = page.locator("a", { hasText: markerA });
+  await expect(cardA).toBeVisible();
+  await expect(cardA).toContainText(`con ${teacher}`);
+
+  // Second: the guide is now selectable directly from the dropdown.
+  await page.goto("/practices/new");
+  await page.getByLabel("Tipo de práctica").selectOption("yoga");
+  await page.getByLabel("Duración (minutos)").fill("60");
+  await page.getByLabel("¿Cómo fue guiada?").selectOption("recorded");
+  await page.getByLabel("Guía").selectOption({ label: teacher });
+  await page.getByLabel("Notas").fill(markerB);
+  await page.getByRole("button", { name: "Crear práctica" }).click();
+  await expect(page).toHaveURL("/diary/practices");
+
+  const cardB = page.locator("a", { hasText: markerB });
+  await expect(cardB).toBeVisible();
+  await expect(cardB).toContainText(`con ${teacher}`);
+
+  // Clean up both.
+  for (const marker of [markerB, markerA]) {
+    const card = page.locator("a", { hasText: marker });
+    page.once("dialog", (dialog) => dialog.accept());
+    await card.click();
+    await page.getByRole("button", { name: "Eliminar práctica" }).click();
+    await expect(page).toHaveURL("/diary/practices");
+  }
+});
