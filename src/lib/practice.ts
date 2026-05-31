@@ -203,7 +203,11 @@ export function summarizePractices(practices: Practice[], tz: string): PracticeS
     bumpBucket(monthMap, monthStart, type, p.durationMin);
 
     if (p.yogaStyle) {
-      yogaStyleMap.set(p.yogaStyle, (yogaStyleMap.get(p.yogaStyle) ?? 0) + 1);
+      // Group "other" practices by their custom name so each named style shows
+      // up distinctly in the distribution instead of collapsing into "Otro".
+      const styleKey =
+        p.yogaStyle === "other" && p.yogaStyleCustom ? p.yogaStyleCustom : p.yogaStyle;
+      yogaStyleMap.set(styleKey, (yogaStyleMap.get(styleKey) ?? 0) + 1);
     }
     for (const fo of p.focusObjects) {
       focusObjectMap.set(fo, (focusObjectMap.get(fo) ?? 0) + 1);

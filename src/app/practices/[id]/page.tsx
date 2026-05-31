@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { DeletePracticeButton } from "@/components/DeletePracticeButton";
 import { PracticeForm } from "@/components/PracticeForm";
 import { Card } from "@/components/ui/Card";
-import { getPractice } from "@/lib/practice";
+import { getPractice, listYogaStyleCustoms } from "@/lib/practice";
 import { practiceTypeLabels } from "@/lib/labels";
 import type { FocusObject, Guidance, Position, YogaStyle } from "@/lib/schemas";
 
@@ -15,6 +15,7 @@ export default async function PracticeDetailPage({ params }: { params: Params })
   if (!practice) notFound();
 
   const type = practice.type as "yoga" | "meditation";
+  const yogaStyleCustoms = await listYogaStyleCustoms();
 
   return (
     <div className="flex flex-col gap-6">
@@ -33,6 +34,7 @@ export default async function PracticeDetailPage({ params }: { params: Params })
       <Card variant="white" padding="lg">
         <PracticeForm
           mode="edit"
+          yogaStyleCustoms={yogaStyleCustoms}
           initial={{
             id: practice.id,
             type,
@@ -43,6 +45,7 @@ export default async function PracticeDetailPage({ params }: { params: Params })
             moodAfter: practice.moodAfter,
             notes: practice.notes,
             yogaStyle: practice.yogaStyle as YogaStyle | null,
+            yogaStyleCustom: practice.yogaStyleCustom,
             focusObjects: practice.focusObjects as FocusObject[],
             position: practice.position as Position | null,
           }}

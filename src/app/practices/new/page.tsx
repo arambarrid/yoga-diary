@@ -1,5 +1,6 @@
 import { PracticeForm } from "@/components/PracticeForm";
 import { Card } from "@/components/ui/Card";
+import { listYogaStyleCustoms } from "@/lib/practice";
 
 type SearchParams = Promise<{
   type?: string;
@@ -10,6 +11,7 @@ export default async function NewPracticePage({ searchParams }: { searchParams: 
   const raw = await searchParams;
   const type = raw.type === "meditation" ? "meditation" : raw.type === "yoga" ? "yoga" : undefined;
   const durationMin = raw.durationMin ? Number(raw.durationMin) : undefined;
+  const yogaStyleCustoms = await listYogaStyleCustoms();
 
   return (
     <div className="flex flex-col gap-6">
@@ -19,6 +21,7 @@ export default async function NewPracticePage({ searchParams }: { searchParams: 
       </div>
       <Card variant="white" padding="lg">
         <PracticeForm
+          yogaStyleCustoms={yogaStyleCustoms}
           initial={{
             type,
             durationMin: Number.isFinite(durationMin) ? durationMin : undefined,

@@ -77,3 +77,31 @@ test("create a meditation practice with multiple focus objects and position", as
   await page.getByRole("button", { name: "Eliminar práctica" }).click();
   await expect(page).toHaveURL("/diary/practices");
 });
+
+test("create a yoga practice with a custom 'Otro' style and see it on the card", async ({
+  page,
+}) => {
+  const marker = `E2E_CUSTOM_${Date.now()}`;
+  const style = `Iyengar ${Date.now()}`;
+
+  await page.goto("/practices/new");
+  await page.getByLabel("Tipo de práctica").selectOption("yoga");
+  await page.getByLabel("Duración (minutos)").fill("50");
+  await page.getByLabel("¿Cómo fue guiada?").selectOption("self");
+  await page.getByLabel("Estilo de yoga").selectOption("other");
+  await page.getByLabel("¿Qué estilo?").fill(style);
+  await page.getByLabel("Notas").fill(marker);
+
+  await page.getByRole("button", { name: "Crear práctica" }).click();
+  await expect(page).toHaveURL("/diary/practices");
+
+  const card = page.locator("a", { hasText: marker });
+  await expect(card).toBeVisible();
+  await expect(card).toContainText(style);
+
+  // Clean up.
+  page.once("dialog", (dialog) => dialog.accept());
+  await card.click();
+  await page.getByRole("button", { name: "Eliminar práctica" }).click();
+  await expect(page).toHaveURL("/diary/practices");
+});

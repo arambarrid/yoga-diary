@@ -24,6 +24,7 @@ type Initial = Partial<{
   moodAfter: number | null;
   notes: string | null;
   yogaStyle: YogaStyle | null;
+  yogaStyleCustom: string | null;
   focusObjects: FocusObject[];
   position: Position | null;
 }>;
@@ -31,6 +32,8 @@ type Initial = Partial<{
 type Props = {
   initial?: Initial;
   mode?: "create" | "edit";
+  // Distinct custom yoga style names previously entered, for autocompletion.
+  yogaStyleCustoms?: string[];
 };
 
 function toLocalDateTimeValue(d: Date | string | undefined): string {
@@ -39,9 +42,10 @@ function toLocalDateTimeValue(d: Date | string | undefined): string {
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
 }
 
-export function PracticeForm({ initial = {}, mode = "create" }: Props) {
+export function PracticeForm({ initial = {}, mode = "create", yogaStyleCustoms = [] }: Props) {
   const router = useRouter();
   const [type, setType] = useState<PracticeType>(initial.type ?? "yoga");
+  const [yogaStyle, setYogaStyle] = useState<YogaStyle>(initial.yogaStyle ?? "integral");
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -49,6 +53,14 @@ export function PracticeForm({ initial = {}, mode = "create" }: Props) {
     setError(null);
     if (type === "meditation" && formData.getAll("focusObjects").length === 0) {
       setError("Seleccioná al menos un objeto de foco");
+      return;
+    }
+    if (
+      type === "yoga" &&
+      yogaStyle === "other" &&
+      !String(formData.get("yogaStyleCustom") ?? "").trim()
+    ) {
+      setError("Nombrá el estilo de yoga");
       return;
     }
     const raw = Object.fromEntries(formData.entries());
@@ -60,6 +72,8 @@ export function PracticeForm({ initial = {}, mode = "create" }: Props) {
             durationMin: Number(raw.durationMin),
             guidance: raw.guidance as Guidance,
             yogaStyle: raw.yogaStyle as YogaStyle,
+            yogaStyleCustom:
+              raw.yogaStyle === "other" ? String(raw.yogaStyleCustom ?? "").trim() || null : null,
             moodBefore: raw.moodBefore ? Number(raw.moodBefore) : null,
             moodAfter: raw.moodAfter ? Number(raw.moodAfter) : null,
             notes: raw.notes ? String(raw.notes) : null,
@@ -148,20 +162,47 @@ export function PracticeForm({ initial = {}, mode = "create" }: Props) {
       </Field>
 
       {type === "yoga" ? (
-        <Field label="Estilo de yoga" htmlFor="yogaStyle" required>
-          <Select
-            id="yogaStyle"
-            name="yogaStyle"
-            defaultValue={initial.yogaStyle ?? "integral"}
-            required
-          >
-            {Object.entries(yogaStyleLabels).map(([value, label]) => (
-              <option key={value} value={value}>
-                {label}
-              </option>
-            ))}
-          </Select>
-        </Field>
+        <>
+          <Field label="Estilo de yoga" htmlFor="yogaStyle" required>
+            <Select
+              id="yogaStyle"
+              name="yogaStyle"
+              value={yogaStyle}
+              onChange={(e) => setYogaStyle(e.target.value as YogaStyle)}
+              required
+            >
+              {Object.entries(yogaStyleLabels).map(([value, label]) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </Select>
+          </Field>
+
+          {yogaStyle === "other" ? (
+            <Field
+              label="¿Qué estilo?"
+              htmlFor="yogaStyleCustom"
+              hint="Se guarda para reusarlo la próxima vez"
+              required
+            >
+              <Input
+                id="yogaStyleCustom"
+                name="yogaStyleCustom"
+                list="yoga-style-customs"
+                defaultValue={initial.yogaStyleCustom ?? ""}
+                placeholder="Ej: Iyengar, Kundalini…"
+                maxLength={100}
+                autoComplete="off"
+              />
+              <datalist id="yoga-style-customs">
+                {yogaStyleCustoms.map((s) => (
+                  <option key={s} value={s} />
+                ))}
+              </datalist>
+            </Field>
+          ) : null}
+        </>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <Field label="Objeto de foco" required>

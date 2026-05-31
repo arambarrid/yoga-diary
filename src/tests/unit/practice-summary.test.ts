@@ -49,6 +49,24 @@ describe("summarizePractices — byType", () => {
   });
 });
 
+describe("summarizePractices — yoga style distribution", () => {
+  it("keys 'other' practices by their custom name instead of collapsing into 'other'", () => {
+    const summary = summarizePractices(
+      [
+        make({ yogaStyle: "vinyasa" }),
+        make({ yogaStyle: "other", yogaStyleCustom: "Iyengar" }),
+        make({ yogaStyle: "other", yogaStyleCustom: "Iyengar" }),
+      ],
+      TZ_UTC,
+    );
+
+    expect(summary.yogaStyleDistribution).toEqual([
+      { yogaStyle: "Iyengar", count: 2 },
+      { yogaStyle: "vinyasa", count: 1 },
+    ]);
+  });
+});
+
 describe("summarizePractices — week bucketing", () => {
   it("groups same-week practices and splits across weeks", () => {
     // ISO weeks (Mon-Sun) in UTC for Jan 2026:
