@@ -21,12 +21,6 @@ export function Nav() {
           >
             Mi diario
           </Link>
-          <Link
-            href="/stats"
-            className="text-sm font-medium text-ink-600 hover:text-brand-primary transition-colors"
-          >
-            Estadísticas
-          </Link>
         </nav>
       </div>
     </header>

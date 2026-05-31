@@ -16,7 +16,7 @@ test("stats page reflects new practices and preserves tz across range filters", 
   const marker = `E2E_STATS_${Date.now()}`;
 
   // --- Baseline: yoga count before we add anything ---
-  await page.goto("/stats");
+  await page.goto("diary/stats");
   // TzGuard re-renders the page with `?tz=` once the browser zone is known.
   await expect(page).toHaveURL(/[?&]tz=/);
   const yogaCount = page.getByTestId("stats-count-yoga");
@@ -36,10 +36,10 @@ test("stats page reflects new practices and preserves tz across range filters", 
   await page.getByLabel("Estilo de yoga").selectOption("vinyasa");
   await page.getByLabel("Notas").fill(marker);
   await page.getByRole("button", { name: "Crear práctica" }).click();
-  await expect(page).toHaveURL("/diary");
+  await expect(page).toHaveURL("/diary/practices");
 
   // --- Stats now show baseline + 1 yoga ---
-  await page.goto("/stats");
+  await page.goto("diary/stats");
   await expect(page).toHaveURL(/[?&]tz=/);
   await expect(page.getByTestId("stats-count-yoga")).toHaveText(String(baseline + 1));
   // Charts still render with dense data.
@@ -62,11 +62,11 @@ test("stats page reflects new practices and preserves tz across range filters", 
   await expect(page).toHaveURL(/[?&]tz=/);
 
   // --- Clean up the practice we created ---
-  await page.goto("/diary");
+  await page.goto("/diary/practices");
   const createdCard = page.locator("a", { hasText: marker });
   await expect(createdCard).toBeVisible();
   await createdCard.click();
   page.once("dialog", (dialog) => dialog.accept());
   await page.getByRole("button", { name: "Eliminar práctica" }).click();
-  await expect(page).toHaveURL("/diary");
+  await expect(page).toHaveURL("/diary/practices");
 });
