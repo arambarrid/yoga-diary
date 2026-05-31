@@ -10,7 +10,12 @@ const TZ_BA = "America/Argentina/Buenos_Aires"; // UTC-3, no DST
 //   Current week in UTC starts Mon 2026-05-25.
 const NOW = new Date("2026-05-29T15:00:00Z");
 
-const wk = (iso: string, type: "yoga" | "meditation", count: number, totalMin = count * 30): PracticeBucket => ({
+const wk = (
+  iso: string,
+  type: "yoga" | "meditation",
+  count: number,
+  totalMin = count * 30,
+): PracticeBucket => ({
   bucketStart: new Date(iso),
   type,
   count,
@@ -85,18 +90,13 @@ describe("buildWeeklySeries — counts and totals", () => {
 describe("buildWeeklySeries — `all` mode", () => {
   it("starts from the earliest bucket when no `from` is given", () => {
     const rows = buildWeeklySeries({
-      buckets: [
-        wk("2026-05-04T00:00:00Z", "yoga", 1),
-        wk("2026-05-25T00:00:00Z", "meditation", 1),
-      ],
+      buckets: [wk("2026-05-04T00:00:00Z", "yoga", 1), wk("2026-05-25T00:00:00Z", "meditation", 1)],
       tz: TZ_UTC,
       now: NOW,
     });
 
     expect(rows[0]!.weekStart.toISOString()).toBe("2026-05-04T00:00:00.000Z");
-    expect(rows[rows.length - 1]!.weekStart.toISOString()).toBe(
-      "2026-05-25T00:00:00.000Z",
-    );
+    expect(rows[rows.length - 1]!.weekStart.toISOString()).toBe("2026-05-25T00:00:00.000Z");
     expect(rows).toHaveLength(4); // May 4, 11, 18, 25
   });
 });
@@ -112,9 +112,7 @@ describe("buildWeeklySeries — time-zone behaviour", () => {
       tz: TZ_UTC,
       now: onSundayLateInBA,
     });
-    expect(utcRows[0]!.weekStart.toISOString()).toBe(
-      "2026-05-25T00:00:00.000Z",
-    );
+    expect(utcRows[0]!.weekStart.toISOString()).toBe("2026-05-25T00:00:00.000Z");
 
     const baRows = buildWeeklySeries({
       buckets: [],
@@ -122,9 +120,7 @@ describe("buildWeeklySeries — time-zone behaviour", () => {
       now: onSundayLateInBA,
     });
     // Mon May 18 00:00 BA = May 18 03:00 UTC.
-    expect(baRows[0]!.weekStart.toISOString()).toBe(
-      "2026-05-18T03:00:00.000Z",
-    );
+    expect(baRows[0]!.weekStart.toISOString()).toBe("2026-05-18T03:00:00.000Z");
   });
 });
 

@@ -16,6 +16,12 @@ export function Nav() {
         </Link>
         <nav className="flex items-center gap-4">
           <Link
+            href="/diary"
+            className="text-sm font-medium text-ink-600 hover:text-brand-primary transition-colors"
+          >
+            Mi diario
+          </Link>
+          <Link
             href="/stats"
             className="text-sm font-medium text-ink-600 hover:text-brand-primary transition-colors"
           >

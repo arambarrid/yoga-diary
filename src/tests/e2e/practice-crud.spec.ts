@@ -20,7 +20,7 @@ test("create, edit and delete a yoga practice through the UI", async ({ page }) 
   await page.getByLabel("Notas").fill(initialNotes);
 
   await page.getByRole("button", { name: "Crear práctica" }).click();
-  await expect(page).toHaveURL("/");
+  await expect(page).toHaveURL("/diary");
 
   // The card surfaces the notes, so we can locate our own row by marker.
   const createdCard = page.locator("a", { hasText: marker });
@@ -34,7 +34,7 @@ test("create, edit and delete a yoga practice through the UI", async ({ page }) 
   const duration = page.getByLabel("Duración (minutos)");
   await duration.fill("75");
   await page.getByRole("button", { name: "Guardar cambios" }).click();
-  await expect(page).toHaveURL("/");
+  await expect(page).toHaveURL("/diary");
 
   const editedCard = page.locator("a", { hasText: marker });
   await expect(editedCard).toContainText("75 min");
@@ -43,7 +43,7 @@ test("create, edit and delete a yoga practice through the UI", async ({ page }) 
   await editedCard.click();
   page.once("dialog", (dialog) => dialog.accept());
   await page.getByRole("button", { name: "Eliminar práctica" }).click();
-  await expect(page).toHaveURL("/");
+  await expect(page).toHaveURL("/diary");
 
   await expect(page.locator("a", { hasText: marker })).toHaveCount(0);
 });
@@ -62,7 +62,7 @@ test("create a meditation practice with multiple focus objects and position", as
   await page.getByLabel("Notas").fill(marker);
 
   await page.getByRole("button", { name: "Crear práctica" }).click();
-  await expect(page).toHaveURL("/");
+  await expect(page).toHaveURL("/diary");
 
   const card = page.locator("a", { hasText: marker });
   await expect(card).toBeVisible();
@@ -75,5 +75,5 @@ test("create a meditation practice with multiple focus objects and position", as
   page.once("dialog", (dialog) => dialog.accept());
   await card.click();
   await page.getByRole("button", { name: "Eliminar práctica" }).click();
-  await expect(page).toHaveURL("/");
+  await expect(page).toHaveURL("/diary");
 });

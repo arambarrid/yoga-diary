@@ -34,7 +34,7 @@ export function DeletePracticeButton({
     }
 
     startTransition(() => {
-      router.push("/");
+      router.push("/diary");
       router.refresh();
     });
   }
