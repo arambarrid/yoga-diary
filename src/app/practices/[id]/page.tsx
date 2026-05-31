@@ -20,7 +20,7 @@ export default async function PracticeDetailPage({ params }: { params: Params })
     <div className="flex flex-col gap-6">
       <div>
         <Link
-          href="/diary"
+          href="/diary/practices"
           className="text-sm text-ink-600 hover:text-brand-primary transition-colors"
         >
           ← Volver al diario

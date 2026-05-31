@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 
 type SearchParams = Promise<{ type?: string }>;
 
-export default async function DiaryPage({ searchParams }: { searchParams: SearchParams }) {
+export default async function PracticesPage({ searchParams }: { searchParams: SearchParams }) {
   const raw = await searchParams;
   const filterParse = practiceFilterSchema.safeParse({ type: raw.type });
   const filter = filterParse.success ? filterParse.data : {};
@@ -17,8 +17,14 @@ export default async function DiaryPage({ searchParams }: { searchParams: Search
     <section className="flex flex-col gap-5">
       <div className="flex items-end justify-between gap-3 flex-wrap">
         <div>
-          <h1 className="font-display text-display-md text-brand-primary leading-none">
-            Mi diario
+          <Link
+            href="/diary"
+            className="text-sm text-ink-600 hover:text-brand-primary transition-colors"
+          >
+            ← Volver al diario
+          </Link>
+          <h1 className="font-display text-display-md text-brand-primary leading-none mt-1">
+            Prácticas
           </h1>
           <p className="text-sm text-ink-600 mt-1">
             {count === 0
@@ -27,14 +33,14 @@ export default async function DiaryPage({ searchParams }: { searchParams: Search
           </p>
         </div>
         <div className="flex gap-2 flex-wrap">
-          <FilterChip href="/diary" label="Todas" active={!filter.type} />
+          <FilterChip href="/diary/practices" label="Todas" active={!filter.type} />
           <FilterChip
-            href="/diary?type=yoga"
+            href="/diary/practices?type=yoga"
             label={practiceTypeLabels.yoga}
             active={filter.type === "yoga"}
           />
           <FilterChip
-            href="/diary?type=meditation"
+            href="/diary/practices?type=meditation"
             label={practiceTypeLabels.meditation}
             active={filter.type === "meditation"}
           />

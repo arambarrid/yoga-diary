@@ -107,7 +107,15 @@ export default async function StatsPage({ searchParams }: { searchParams: Search
 function PageHeader() {
   return (
     <header>
-      <h1 className="font-display text-display-lg text-brand-primary leading-none">Estadísticas</h1>
+      <Link
+        href="/diary"
+        className="text-sm text-ink-600 hover:text-brand-primary transition-colors"
+      >
+        ← Volver al diario
+      </Link>
+      <h1 className="font-display text-display-lg text-brand-primary leading-none mt-1">
+        Estadísticas
+      </h1>
       <p className="text-ink-600 mt-1">Tu práctica en números.</p>
     </header>
   );
@@ -120,7 +128,7 @@ function RangeFilter({ active, tz }: { active: RangeKey; tz: string }) {
       {keys.map((k) => {
         const params = new URLSearchParams({ tz });
         if (k !== DEFAULT_RANGE) params.set("range", k);
-        const href = `/stats?${params.toString()}`;
+        const href = `/diary/stats?${params.toString()}`;
         return (
           <Link
             key={k}
