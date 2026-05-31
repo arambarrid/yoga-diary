@@ -36,14 +36,12 @@ test("stats page reflects new practices and preserves tz across range filters", 
   await page.getByLabel("Estilo de yoga").selectOption("vinyasa");
   await page.getByLabel("Notas").fill(marker);
   await page.getByRole("button", { name: "Crear práctica" }).click();
-  await expect(page).toHaveURL("/");
+  await expect(page).toHaveURL("/diary");
 
   // --- Stats now show baseline + 1 yoga ---
   await page.goto("/stats");
   await expect(page).toHaveURL(/[?&]tz=/);
-  await expect(page.getByTestId("stats-count-yoga")).toHaveText(
-    String(baseline + 1),
-  );
+  await expect(page.getByTestId("stats-count-yoga")).toHaveText(String(baseline + 1));
   // Charts still render with dense data.
   await expect(page.locator(".recharts-wrapper")).toHaveCount(2);
 
@@ -64,11 +62,11 @@ test("stats page reflects new practices and preserves tz across range filters", 
   await expect(page).toHaveURL(/[?&]tz=/);
 
   // --- Clean up the practice we created ---
-  await page.goto("/");
+  await page.goto("/diary");
   const createdCard = page.locator("a", { hasText: marker });
   await expect(createdCard).toBeVisible();
   await createdCard.click();
   page.once("dialog", (dialog) => dialog.accept());
   await page.getByRole("button", { name: "Eliminar práctica" }).click();
-  await expect(page).toHaveURL("/");
+  await expect(page).toHaveURL("/diary");
 });

@@ -120,9 +120,7 @@ export const practiceSummaryFilterSchema = z.object({
 });
 export type PracticeSummaryFilter = z.infer<typeof practiceSummaryFilterSchema>;
 
-export async function getPracticeSummary(
-  filter: PracticeSummaryFilter,
-): Promise<PracticeSummary> {
+export async function getPracticeSummary(filter: PracticeSummaryFilter): Promise<PracticeSummary> {
   const where: Prisma.PracticeWhereInput = {};
   if (filter.from || filter.to) {
     where.date = {};
@@ -170,10 +168,7 @@ export function summarizePractices(practices: Practice[], tz: string): PracticeS
     // Bucket in the user's zone, then store the UTC instant of that bucket
     // start so two readers with the same tz always get the same key.
     const zoned = toZonedTime(p.date, tz);
-    const weekStart = fromZonedTime(
-      startOfWeek(zoned, { weekStartsOn: 1 }),
-      tz,
-    );
+    const weekStart = fromZonedTime(startOfWeek(zoned, { weekStartsOn: 1 }), tz);
     const monthStart = fromZonedTime(startOfMonth(zoned), tz);
     bumpBucket(weekMap, weekStart, type, p.durationMin);
     bumpBucket(monthMap, monthStart, type, p.durationMin);
@@ -208,8 +203,7 @@ export function summarizePractices(practices: Practice[], tz: string): PracticeS
     })).sort(byCountDesc),
     moodDeltaByType: {
       yoga: moodSum.yoga.n > 0 ? moodSum.yoga.sum / moodSum.yoga.n : null,
-      meditation:
-        moodSum.meditation.n > 0 ? moodSum.meditation.sum / moodSum.meditation.n : null,
+      meditation: moodSum.meditation.n > 0 ? moodSum.meditation.sum / moodSum.meditation.n : null,
     },
   };
 }

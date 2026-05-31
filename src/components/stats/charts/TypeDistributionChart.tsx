@@ -20,11 +20,7 @@ export function TypeDistributionChart({
     <div className="flex flex-col gap-6">
       {hasYoga && <BarList heading="Estilos de yoga" items={yogaStyles} accent="yoga" />}
       {hasMeditation && (
-        <BarList
-          heading="Objetos de meditación"
-          items={focusObjects}
-          accent="meditation"
-        />
+        <BarList heading="Objetos de meditación" items={focusObjects} accent="meditation" />
       )}
     </div>
   );
@@ -52,18 +48,11 @@ function BarList({
           const pct = (it.count / max) * 100;
           return (
             <li key={it.label} className="flex items-center gap-3">
-              <span className="text-sm text-ink-900 w-32 shrink-0 truncate">
-                {it.label}
-              </span>
+              <span className="text-sm text-ink-900 w-32 shrink-0 truncate">{it.label}</span>
               <div className="flex-1 h-2.5 bg-ink-400/10 rounded-full overflow-hidden">
-                <div
-                  className={`h-full ${barColor} rounded-full`}
-                  style={{ width: `${pct}%` }}
-                />
+                <div className={`h-full ${barColor} rounded-full`} style={{ width: `${pct}%` }} />
               </div>
-              <span className="text-sm text-ink-600 tabular-nums w-8 text-right">
-                {it.count}
-              </span>
+              <span className="text-sm text-ink-600 tabular-nums w-8 text-right">{it.count}</span>
             </li>
           );
         })}

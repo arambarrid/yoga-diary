@@ -92,7 +92,7 @@ export function PracticeForm({ initial = {}, mode = "create" }: Props) {
     }
 
     startTransition(() => {
-      router.push("/");
+      router.push("/diary");
       router.refresh();
     });
   }

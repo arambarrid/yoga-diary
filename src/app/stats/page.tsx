@@ -6,11 +6,7 @@ import { FrequencyChart } from "@/components/stats/charts/FrequencyChart";
 import { TypeDistributionChart } from "@/components/stats/charts/TypeDistributionChart";
 import { getPracticeSummary, type PracticeSummary } from "@/lib/practice";
 import { buildWeeklySeries } from "@/lib/stats-series";
-import {
-  focusObjectLabels,
-  practiceTypeLabels,
-  yogaStyleLabels,
-} from "@/lib/labels";
+import { focusObjectLabels, practiceTypeLabels, yogaStyleLabels } from "@/lib/labels";
 import type { FocusObject, YogaStyle } from "@/lib/schemas";
 import { cn } from "@/lib/utils";
 
@@ -41,11 +37,7 @@ function parseRange(raw: string | undefined): {
   return { key, from, to };
 }
 
-export default async function StatsPage({
-  searchParams,
-}: {
-  searchParams: SearchParams;
-}) {
+export default async function StatsPage({ searchParams }: { searchParams: SearchParams }) {
   const raw = await searchParams;
 
   // Wait for TzGuard to populate `?tz=` before doing any TZ-sensitive
@@ -102,10 +94,7 @@ export default async function StatsPage({
         <section className="flex flex-col gap-3">
           <SectionHeading>Distribución</SectionHeading>
           <Card variant="soft" padding="md">
-            <TypeDistributionChart
-              yogaStyles={yogaStyles}
-              focusObjects={focusObjects}
-            />
+            <TypeDistributionChart yogaStyles={yogaStyles} focusObjects={focusObjects} />
           </Card>
         </section>
       )}
@@ -118,9 +107,7 @@ export default async function StatsPage({
 function PageHeader() {
   return (
     <header>
-      <h1 className="font-display text-display-lg text-brand-primary leading-none">
-        Estadísticas
-      </h1>
+      <h1 className="font-display text-display-lg text-brand-primary leading-none">Estadísticas</h1>
       <p className="text-ink-600 mt-1">Tu práctica en números.</p>
     </header>
   );
@@ -129,11 +116,7 @@ function PageHeader() {
 function RangeFilter({ active, tz }: { active: RangeKey; tz: string }) {
   const keys: RangeKey[] = ["30", "90", "all"];
   return (
-    <div
-      className="flex gap-2 flex-wrap"
-      role="group"
-      aria-label="Rango de tiempo"
-    >
+    <div className="flex gap-2 flex-wrap" role="group" aria-label="Rango de tiempo">
       {keys.map((k) => {
         const params = new URLSearchParams({ tz });
         if (k !== DEFAULT_RANGE) params.set("range", k);
@@ -157,35 +140,19 @@ function RangeFilter({ active, tz }: { active: RangeKey; tz: string }) {
   );
 }
 
-function SectionHeading({
-  children,
-  note,
-}: {
-  children: React.ReactNode;
-  note?: string;
-}) {
+function SectionHeading({ children, note }: { children: React.ReactNode; note?: string }) {
   return (
     <div>
-      <h2 className="font-display text-display-md text-brand-primary leading-none">
-        {children}
-      </h2>
+      <h2 className="font-display text-display-md text-brand-primary leading-none">{children}</h2>
       {note && <p className="text-xs text-ink-600 mt-1">{note}</p>}
     </div>
   );
 }
 
-function ChartCard({
-  caption,
-  children,
-}: {
-  caption: string;
-  children: React.ReactNode;
-}) {
+function ChartCard({ caption, children }: { caption: string; children: React.ReactNode }) {
   return (
     <Card variant="soft" padding="md">
-      <p className="text-xs uppercase tracking-wider text-ink-600 mb-2">
-        {caption}
-      </p>
+      <p className="text-xs uppercase tracking-wider text-ink-600 mb-2">{caption}</p>
       {children}
     </Card>
   );
@@ -243,9 +210,7 @@ function MoodDeltaSection({ summary }: { summary: PracticeSummary }) {
   if (yoga === null && meditation === null) return null;
   return (
     <section className="flex flex-col gap-3">
-      <SectionHeading note="Cambio promedio de mood (después − antes).">
-        Mood delta
-      </SectionHeading>
+      <SectionHeading note="Cambio promedio de mood (después − antes).">Mood delta</SectionHeading>
       <div className="grid grid-cols-2 gap-3 max-w-2xl">
         <NumberCard
           label={practiceTypeLabels.yoga}

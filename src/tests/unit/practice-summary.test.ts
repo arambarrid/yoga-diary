@@ -40,11 +40,7 @@ describe("summarizePractices — empty input", () => {
 describe("summarizePractices — byType", () => {
   it("counts yoga and meditation separately", () => {
     const summary = summarizePractices(
-      [
-        make({ type: "yoga" }),
-        make({ type: "yoga" }),
-        make({ type: "meditation" }),
-      ],
+      [make({ type: "yoga" }), make({ type: "yoga" }), make({ type: "meditation" })],
       TZ_UTC,
     );
 
@@ -103,15 +99,11 @@ describe("summarizePractices — week bucketing", () => {
     const p = make({ date: new Date("2026-01-19T02:00:00Z") });
 
     const utcSummary = summarizePractices([p], TZ_UTC);
-    expect(utcSummary.byWeek[0]!.bucketStart).toEqual(
-      new Date("2026-01-19T00:00:00Z"),
-    );
+    expect(utcSummary.byWeek[0]!.bucketStart).toEqual(new Date("2026-01-19T00:00:00Z"));
 
     const baSummary = summarizePractices([p], TZ_BA);
     // Mon Jan 12 00:00 in BA (UTC-3) is Jan 12 03:00 UTC.
-    expect(baSummary.byWeek[0]!.bucketStart).toEqual(
-      new Date("2026-01-12T03:00:00Z"),
-    );
+    expect(baSummary.byWeek[0]!.bucketStart).toEqual(new Date("2026-01-12T03:00:00Z"));
   });
 });
 
@@ -121,15 +113,11 @@ describe("summarizePractices — month bucketing", () => {
     const p = make({ date: new Date("2026-02-01T02:00:00Z") });
 
     const utcSummary = summarizePractices([p], TZ_UTC);
-    expect(utcSummary.byMonth[0]!.bucketStart).toEqual(
-      new Date("2026-02-01T00:00:00Z"),
-    );
+    expect(utcSummary.byMonth[0]!.bucketStart).toEqual(new Date("2026-02-01T00:00:00Z"));
 
     const baSummary = summarizePractices([p], TZ_BA);
     // Jan 01 00:00 in BA is Jan 01 03:00 UTC.
-    expect(baSummary.byMonth[0]!.bucketStart).toEqual(
-      new Date("2026-01-01T03:00:00Z"),
-    );
+    expect(baSummary.byMonth[0]!.bucketStart).toEqual(new Date("2026-01-01T03:00:00Z"));
   });
 });
 
