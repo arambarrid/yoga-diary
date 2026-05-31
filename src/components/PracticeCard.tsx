@@ -19,7 +19,9 @@ export function PracticeCard({ practice }: { practice: Practice }) {
 
   const specifics = isYoga
     ? practice.yogaStyle
-      ? yogaStyleLabels[practice.yogaStyle as YogaStyle]
+      ? practice.yogaStyle === "other" && practice.yogaStyleCustom
+        ? practice.yogaStyleCustom
+        : yogaStyleLabels[practice.yogaStyle as YogaStyle]
       : null
     : practice.focusObjects.length > 0 && practice.position
       ? `${practice.focusObjects

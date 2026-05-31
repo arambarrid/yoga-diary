@@ -16,6 +16,7 @@ const make = (overrides: Partial<Practice> = {}): Practice => ({
   moodAfter: null,
   notes: null,
   yogaStyle: null,
+  yogaStyleCustom: null,
   focusObjects: [],
   position: null,
   ...overrides,
@@ -45,6 +46,24 @@ describe("summarizePractices — byType", () => {
     );
 
     expect(summary.byType).toEqual({ yoga: 2, meditation: 1 });
+  });
+});
+
+describe("summarizePractices — yoga style distribution", () => {
+  it("keys 'other' practices by their custom name instead of collapsing into 'other'", () => {
+    const summary = summarizePractices(
+      [
+        make({ yogaStyle: "vinyasa" }),
+        make({ yogaStyle: "other", yogaStyleCustom: "Iyengar" }),
+        make({ yogaStyle: "other", yogaStyleCustom: "Iyengar" }),
+      ],
+      TZ_UTC,
+    );
+
+    expect(summary.yogaStyleDistribution).toEqual([
+      { yogaStyle: "Iyengar", count: 2 },
+      { yogaStyle: "vinyasa", count: 1 },
+    ]);
   });
 });
 

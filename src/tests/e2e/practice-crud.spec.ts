@@ -77,3 +77,72 @@ test("create a meditation practice with multiple focus objects and position", as
   await page.getByRole("button", { name: "Eliminar práctica" }).click();
   await expect(page).toHaveURL("/diary/practices");
 });
+
+test("create a yoga practice with a custom 'Otro' style and see it on the card", async ({
+  page,
+}) => {
+  const marker = `E2E_CUSTOM_${Date.now()}`;
+  const style = `Iyengar ${Date.now()}`;
+
+  await page.goto("/practices/new");
+  await page.getByLabel("Tipo de práctica").selectOption("yoga");
+  await page.getByLabel("Duración (minutos)").fill("50");
+  await page.getByLabel("¿Cómo fue guiada?").selectOption("self");
+  await page.getByLabel("Estilo de yoga").selectOption("other");
+  await page.getByLabel("¿Qué estilo?").fill(style);
+  await page.getByLabel("Notas").fill(marker);
+
+  await page.getByRole("button", { name: "Crear práctica" }).click();
+  await expect(page).toHaveURL("/diary/practices");
+
+  const card = page.locator("a", { hasText: marker });
+  await expect(card).toBeVisible();
+  await expect(card).toContainText(style);
+
+  // Clean up.
+  page.once("dialog", (dialog) => dialog.accept());
+  await card.click();
+  await page.getByRole("button", { name: "Eliminar práctica" }).click();
+  await expect(page).toHaveURL("/diary/practices");
+});
+
+test("reuse a previously-saved custom yoga style from the dropdown", async ({ page }) => {
+  const stamp = Date.now();
+  const style = `Reuse ${stamp}`;
+  const markerA = `E2E_REUSE_A_${stamp}`;
+  const markerB = `E2E_REUSE_B_${stamp}`;
+
+  // First practice: create a brand-new custom style via "Otro…".
+  await page.goto("/practices/new");
+  await page.getByLabel("Tipo de práctica").selectOption("yoga");
+  await page.getByLabel("Duración (minutos)").fill("40");
+  await page.getByLabel("¿Cómo fue guiada?").selectOption("self");
+  await page.getByLabel("Estilo de yoga").selectOption("other");
+  await page.getByLabel("¿Qué estilo?").fill(style);
+  await page.getByLabel("Notas").fill(markerA);
+  await page.getByRole("button", { name: "Crear práctica" }).click();
+  await expect(page).toHaveURL("/diary/practices");
+
+  // Second practice: the style is now selectable directly from the dropdown.
+  await page.goto("/practices/new");
+  await page.getByLabel("Tipo de práctica").selectOption("yoga");
+  await page.getByLabel("Duración (minutos)").fill("40");
+  await page.getByLabel("¿Cómo fue guiada?").selectOption("self");
+  await page.getByLabel("Estilo de yoga").selectOption({ label: style });
+  await page.getByLabel("Notas").fill(markerB);
+  await page.getByRole("button", { name: "Crear práctica" }).click();
+  await expect(page).toHaveURL("/diary/practices");
+
+  const cardB = page.locator("a", { hasText: markerB });
+  await expect(cardB).toBeVisible();
+  await expect(cardB).toContainText(style);
+
+  // Clean up both practices.
+  for (const marker of [markerB, markerA]) {
+    const card = page.locator("a", { hasText: marker });
+    page.once("dialog", (dialog) => dialog.accept());
+    await card.click();
+    await page.getByRole("button", { name: "Eliminar práctica" }).click();
+    await expect(page).toHaveURL("/diary/practices");
+  }
+});

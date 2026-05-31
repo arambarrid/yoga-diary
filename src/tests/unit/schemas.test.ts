@@ -97,4 +97,36 @@ describe("practiceSchema (discriminated union)", () => {
     });
     expect(result.success).toBe(true);
   });
+
+  it("rejects a yoga practice with style 'other' but no custom name", () => {
+    const result = practiceSchema.safeParse({ ...baseYoga, yogaStyle: "other" });
+    expect(result.success).toBe(false);
+  });
+
+  it("accepts a yoga practice with style 'other' and a custom name", () => {
+    const result = practiceSchema.safeParse({
+      ...baseYoga,
+      yogaStyle: "other",
+      yogaStyleCustom: "Iyengar",
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it("rejects a blank custom name (trimmed) for style 'other'", () => {
+    const result = practiceSchema.safeParse({
+      ...baseYoga,
+      yogaStyle: "other",
+      yogaStyleCustom: "   ",
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it("accepts (and ignores) yogaStyleCustom when style is a known enum", () => {
+    const result = practiceSchema.safeParse({
+      ...baseYoga,
+      yogaStyle: "vinyasa",
+      yogaStyleCustom: "ignored",
+    });
+    expect(result.success).toBe(true);
+  });
 });

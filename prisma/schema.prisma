@@ -24,10 +24,11 @@ model Practice {
   moodAfter   Int?
   notes       String?
 
-  yogaStyle String?
+  yogaStyle       String?
+  yogaStyleCustom String?
 
   focusObjects String[] @default([])
-  position    String?
+  position     String?
 
   @@index([date])
   @@index([type])
