@@ -45,6 +45,10 @@ const commonFields = {
 export const yogaPracticeSchema = z.object({
   type: z.literal("yoga"),
   yogaStyle: yogaStyleEnum,
+  // Free-text name used only when yogaStyle is "other". Required by the
+  // refinement on practiceSchema / practiceUpdateSchema below. Trimmed;
+  // original casing preserved for display.
+  yogaStyleCustom: z.string().trim().min(1).max(100).optional().nullable(),
   ...commonFields,
 });
 
@@ -55,17 +59,34 @@ export const meditationPracticeSchema = z.object({
   ...commonFields,
 });
 
-export const practiceSchema = z.discriminatedUnion("type", [
-  yogaPracticeSchema,
-  meditationPracticeSchema,
-]);
+export const practiceSchema = z
+  .discriminatedUnion("type", [yogaPracticeSchema, meditationPracticeSchema])
+  .superRefine((data, ctx) => {
+    if (data.type === "yoga" && data.yogaStyle === "other" && !data.yogaStyleCustom) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["yogaStyleCustom"],
+        message: "Nombrá el estilo de yoga",
+      });
+    }
+  });
 
 export type PracticeInput = z.infer<typeof practiceSchema>;
 export type YogaPracticeInput = z.infer<typeof yogaPracticeSchema>;
 export type MeditationPracticeInput = z.infer<typeof meditationPracticeSchema>;
 
-export const practiceUpdateSchema = z.union([
-  yogaPracticeSchema.partial().extend({ type: z.literal("yoga") }),
-  meditationPracticeSchema.partial().extend({ type: z.literal("meditation") }),
-]);
+export const practiceUpdateSchema = z
+  .union([
+    yogaPracticeSchema.partial().extend({ type: z.literal("yoga") }),
+    meditationPracticeSchema.partial().extend({ type: z.literal("meditation") }),
+  ])
+  .superRefine((data, ctx) => {
+    if (data.type === "yoga" && data.yogaStyle === "other" && !data.yogaStyleCustom) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["yogaStyleCustom"],
+        message: "Nombrá el estilo de yoga",
+      });
+    }
+  });
 export type PracticeUpdate = z.infer<typeof practiceUpdateSchema>;

@@ -28,11 +28,18 @@ export function toCreateInput(input: PracticeInput): Prisma.PracticeCreateInput 
     notes: input.notes ?? null,
   };
   if (input.type === "yoga") {
-    return { ...base, yogaStyle: input.yogaStyle, focusObjects: [], position: null };
+    return {
+      ...base,
+      yogaStyle: input.yogaStyle,
+      yogaStyleCustom: input.yogaStyle === "other" ? (input.yogaStyleCustom ?? null) : null,
+      focusObjects: [],
+      position: null,
+    };
   }
   return {
     ...base,
     yogaStyle: null,
+    yogaStyleCustom: null,
     focusObjects: input.focusObjects,
     position: input.position,
   };
@@ -48,6 +55,7 @@ export function toUpdateInput(input: PracticeUpdate): Prisma.PracticeUpdateInput
   if (input.notes !== undefined) data.notes = input.notes;
   if (input.type === "yoga" && input.yogaStyle !== undefined) {
     data.yogaStyle = input.yogaStyle;
+    data.yogaStyleCustom = input.yogaStyle === "other" ? (input.yogaStyleCustom ?? null) : null;
   }
   if (input.type === "meditation") {
     if (input.focusObjects !== undefined) data.focusObjects = input.focusObjects;
@@ -84,6 +92,27 @@ export async function updatePractice(id: string, input: PracticeUpdate): Promise
 
 export async function deletePractice(id: string): Promise<void> {
   await prisma.practice.delete({ where: { id } });
+}
+
+// Distinct custom yoga style names previously entered, for autocompletion in
+// the form. De-duplicated case-insensitively; original casing preserved (first
+// occurrence wins, ordered alphabetically).
+export async function listYogaStyleCustoms(): Promise<string[]> {
+  const rows = await prisma.practice.findMany({
+    where: { yogaStyleCustom: { not: null } },
+    select: { yogaStyleCustom: true },
+    orderBy: { yogaStyleCustom: "asc" },
+  });
+  const seen = new Set<string>();
+  const result: string[] = [];
+  for (const { yogaStyleCustom } of rows) {
+    if (!yogaStyleCustom) continue;
+    const key = yogaStyleCustom.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    result.push(yogaStyleCustom);
+  }
+  return result;
 }
 
 export { practiceSchema, practiceUpdateSchema };

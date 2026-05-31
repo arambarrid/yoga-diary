@@ -16,6 +16,7 @@ const make = (overrides: Partial<Practice> = {}): Practice => ({
   moodAfter: null,
   notes: null,
   yogaStyle: null,
+  yogaStyleCustom: null,
   focusObjects: [],
   position: null,
   ...overrides,
