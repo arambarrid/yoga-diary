@@ -33,7 +33,7 @@ type Props = {
   initial?: Initial;
   mode?: "create" | "edit";
   // Distinct custom yoga style names previously saved, offered as options in
-  // the style dropdown ("Tus estilos").
+  // the style dropdown.
   yogaStyleCustoms?: string[];
 };
 
@@ -56,8 +56,8 @@ export function PracticeForm({ initial = {}, mode = "create", yogaStyleCustoms =
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
-  // Names shown under "Tus estilos"; include the one being edited if the
-  // fetched list doesn't already contain it.
+  // Custom names offered as dropdown options; include the one being edited if
+  // the fetched list doesn't already contain it.
   const customStyleNames = [...yogaStyleCustoms];
   if (
     editingCustom &&
