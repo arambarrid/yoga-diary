@@ -129,4 +129,19 @@ describe("practiceSchema (discriminated union)", () => {
     });
     expect(result.success).toBe(true);
   });
+
+  it("accepts an optional teacher on a guided practice", () => {
+    const result = practiceSchema.safeParse({ ...baseYoga, guidance: "live", teacher: "Lu" });
+    expect(result.success).toBe(true);
+  });
+
+  it("accepts a practice without a teacher", () => {
+    const result = practiceSchema.safeParse(baseYoga);
+    expect(result.success).toBe(true);
+  });
+
+  it("rejects a blank teacher (trimmed)", () => {
+    const result = practiceSchema.safeParse({ ...baseYoga, guidance: "live", teacher: "   " });
+    expect(result.success).toBe(false);
+  });
 });

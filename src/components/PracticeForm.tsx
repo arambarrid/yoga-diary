@@ -20,6 +20,7 @@ type Initial = Partial<{
   date: string;
   durationMin: number;
   guidance: Guidance;
+  teacher: string | null;
   moodBefore: number | null;
   moodAfter: number | null;
   notes: string | null;
@@ -35,6 +36,8 @@ type Props = {
   // Distinct custom yoga style names previously saved, offered as options in
   // the style dropdown.
   yogaStyleCustoms?: string[];
+  // Distinct teacher/guide names previously saved, offered as dropdown options.
+  teachers?: string[];
 };
 
 function toLocalDateTimeValue(d: Date | string | undefined): string {
@@ -43,9 +46,17 @@ function toLocalDateTimeValue(d: Date | string | undefined): string {
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
 }
 
-export function PracticeForm({ initial = {}, mode = "create", yogaStyleCustoms = [] }: Props) {
+export function PracticeForm({
+  initial = {},
+  mode = "create",
+  yogaStyleCustoms = [],
+  teachers = [],
+}: Props) {
   const router = useRouter();
   const [type, setType] = useState<PracticeType>(initial.type ?? "yoga");
+  const [guidance, setGuidance] = useState<Guidance>(initial.guidance ?? "live");
+  // Teacher/guide <select> value: "" (none), a previous name, or "__new__".
+  const [teacher, setTeacher] = useState<string>(initial.teacher ?? "");
   // The yoga-style <select> value is a known enum, "other" (to name a new one),
   // or "custom:<name>" for a previously-saved custom style.
   const editingCustom =
@@ -64,6 +75,17 @@ export function PracticeForm({ initial = {}, mode = "create", yogaStyleCustoms =
     !customStyleNames.some((s) => s.toLowerCase() === editingCustom.toLowerCase())
   ) {
     customStyleNames.push(editingCustom);
+  }
+
+  // Teacher names offered as dropdown options; include the one being edited if
+  // the fetched list doesn't already contain it.
+  const teacherNames = [...teachers];
+  const editingTeacher = initial.teacher ?? null;
+  if (
+    editingTeacher &&
+    !teacherNames.some((t) => t.toLowerCase() === editingTeacher.toLowerCase())
+  ) {
+    teacherNames.push(editingTeacher);
   }
 
   async function handleSubmit(formData: FormData) {
@@ -92,6 +114,15 @@ export function PracticeForm({ initial = {}, mode = "create", yogaStyleCustoms =
     } else {
       resolvedYogaStyle = yogaStyle as YogaStyle;
     }
+    // Resolve the guide value; only kept when the practice is guided.
+    let resolvedTeacher: string | null = null;
+    if (guidance !== "self") {
+      if (teacher === "__new__") {
+        resolvedTeacher = String(formData.get("teacherNew") ?? "").trim() || null;
+      } else if (teacher) {
+        resolvedTeacher = teacher;
+      }
+    }
     const raw = Object.fromEntries(formData.entries());
     const payload: PracticeInput =
       type === "yoga"
@@ -100,6 +131,7 @@ export function PracticeForm({ initial = {}, mode = "create", yogaStyleCustoms =
             date: new Date(String(raw.date)),
             durationMin: Number(raw.durationMin),
             guidance: raw.guidance as Guidance,
+            teacher: resolvedTeacher,
             yogaStyle: resolvedYogaStyle,
             yogaStyleCustom: resolvedYogaStyleCustom,
             moodBefore: raw.moodBefore ? Number(raw.moodBefore) : null,
@@ -111,6 +143,7 @@ export function PracticeForm({ initial = {}, mode = "create", yogaStyleCustoms =
             date: new Date(String(raw.date)),
             durationMin: Number(raw.durationMin),
             guidance: raw.guidance as Guidance,
+            teacher: resolvedTeacher,
             focusObjects: formData.getAll("focusObjects") as FocusObject[],
             position: raw.position as Position,
             moodBefore: raw.moodBefore ? Number(raw.moodBefore) : null,
@@ -180,7 +213,13 @@ export function PracticeForm({ initial = {}, mode = "create", yogaStyleCustoms =
       </div>
 
       <Field label="¿Cómo fue guiada?" htmlFor="guidance" required>
-        <Select id="guidance" name="guidance" defaultValue={initial.guidance ?? "live"} required>
+        <Select
+          id="guidance"
+          name="guidance"
+          value={guidance}
+          onChange={(e) => setGuidance(e.target.value as Guidance)}
+          required
+        >
           {Object.entries(guidanceLabels).map(([value, label]) => (
             <option key={value} value={value}>
               {label}
@@ -188,6 +227,35 @@ export function PracticeForm({ initial = {}, mode = "create", yogaStyleCustoms =
           ))}
         </Select>
       </Field>
+
+      {guidance !== "self" ? (
+        <Field label="Guía" htmlFor="teacher" hint="Opcional · quién guió la práctica">
+          <Select
+            id="teacher"
+            name="teacher"
+            value={teacher}
+            onChange={(e) => setTeacher(e.target.value)}
+          >
+            <option value="">Sin especificar</option>
+            {teacherNames.map((t) => (
+              <option key={t} value={t}>
+                {t}
+              </option>
+            ))}
+            <option value="__new__">Otra persona…</option>
+          </Select>
+          {teacher === "__new__" ? (
+            <Input
+              name="teacherNew"
+              defaultValue=""
+              placeholder="Nombre de quien guió"
+              maxLength={100}
+              autoComplete="off"
+              aria-label="Nombre de la guía"
+            />
+          ) : null}
+        </Field>
+      ) : null}
 
       {type === "yoga" ? (
         <>

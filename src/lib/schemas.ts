@@ -37,6 +37,9 @@ const commonFields = {
     .positive()
     .max(24 * 60),
   guidance: guidanceEnum,
+  // Optional teacher/guide name; only meaningful when the practice is guided.
+  // Trimmed; original casing preserved for display.
+  teacher: z.string().trim().min(1).max(100).optional().nullable(),
   moodBefore: moodScale.optional().nullable(),
   moodAfter: moodScale.optional().nullable(),
   notes: z.string().max(5000).optional().nullable(),
