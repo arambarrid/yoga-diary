@@ -13,8 +13,6 @@ const make = (overrides: Partial<Practice> = {}): Practice => ({
   durationMin: 30,
   guidance: "self",
   teacher: null,
-  moodBefore: null,
-  moodAfter: null,
   notes: null,
   yogaStyle: null,
   yogaStyleCustom: null,
@@ -27,7 +25,7 @@ const TZ_BA = "America/Argentina/Buenos_Aires"; // UTC-3, no DST
 const TZ_UTC = "UTC";
 
 describe("summarizePractices — empty input", () => {
-  it("returns zeroed counts, empty arrays and null mood deltas", () => {
+  it("returns zeroed counts and empty arrays", () => {
     const summary = summarizePractices([], TZ_BA);
 
     expect(summary.byType).toEqual({ yoga: 0, meditation: 0 });
@@ -35,7 +33,6 @@ describe("summarizePractices — empty input", () => {
     expect(summary.byMonth).toEqual([]);
     expect(summary.yogaStyleDistribution).toEqual([]);
     expect(summary.focusObjectDistribution).toEqual([]);
-    expect(summary.moodDeltaByType).toEqual({ yoga: null, meditation: null });
   });
 });
 
@@ -181,43 +178,5 @@ describe("summarizePractices — distributions", () => {
 
     expect(summary.yogaStyleDistribution).toEqual([]);
     expect(summary.focusObjectDistribution).toEqual([]);
-  });
-});
-
-describe("summarizePractices — moodDeltaByType", () => {
-  it("averages (moodAfter - moodBefore) per type", () => {
-    const summary = summarizePractices(
-      [
-        make({ type: "yoga", moodBefore: 2, moodAfter: 4 }), // +2
-        make({ type: "yoga", moodBefore: 3, moodAfter: 4 }), // +1
-        make({ type: "meditation", moodBefore: 1, moodAfter: 4 }), // +3
-      ],
-      TZ_UTC,
-    );
-
-    expect(summary.moodDeltaByType.yoga).toBeCloseTo(1.5);
-    expect(summary.moodDeltaByType.meditation).toBeCloseTo(3);
-  });
-
-  it("ignores practices where either mood is null", () => {
-    const summary = summarizePractices(
-      [
-        make({ type: "yoga", moodBefore: 2, moodAfter: 4 }), // counted: +2
-        make({ type: "yoga", moodBefore: null, moodAfter: 4 }), // skipped
-        make({ type: "yoga", moodBefore: 2, moodAfter: null }), // skipped
-      ],
-      TZ_UTC,
-    );
-
-    expect(summary.moodDeltaByType.yoga).toBe(2);
-  });
-
-  it("returns null for a type with no fully-recorded mood data", () => {
-    const summary = summarizePractices(
-      [make({ type: "yoga", moodBefore: 2, moodAfter: 4 })],
-      TZ_UTC,
-    );
-
-    expect(summary.moodDeltaByType.meditation).toBeNull();
   });
 });

@@ -21,8 +21,6 @@ model Practice {
   durationMin Int
   guidance    String
   teacher     String?
-  moodBefore  Int?
-  moodAfter   Int?
   notes       String?
 
   yogaStyle       String?
