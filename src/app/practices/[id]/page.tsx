@@ -44,8 +44,6 @@ export default async function PracticeDetailPage({ params }: { params: Params })
             durationMin: practice.durationMin,
             guidance: practice.guidance as Guidance,
             teacher: practice.teacher,
-            moodBefore: practice.moodBefore,
-            moodAfter: practice.moodAfter,
             notes: practice.notes,
             yogaStyle: practice.yogaStyle as YogaStyle | null,
             yogaStyleCustom: practice.yogaStyleCustom,
