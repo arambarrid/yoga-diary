@@ -99,7 +99,6 @@ export default async function StatsPage({ searchParams }: { searchParams: Search
         </section>
       )}
 
-      <MoodDeltaSection summary={summary} />
     </div>
   );
 }
@@ -211,30 +210,4 @@ function NumberCard({
       {unit && <p className="text-xs text-ink-600 mt-1">{unit}</p>}
     </Card>
   );
-}
-
-function MoodDeltaSection({ summary }: { summary: PracticeSummary }) {
-  const { yoga, meditation } = summary.moodDeltaByType;
-  if (yoga === null && meditation === null) return null;
-  return (
-    <section className="flex flex-col gap-3">
-      <SectionHeading note="Cambio promedio de mood (después − antes).">Mood delta</SectionHeading>
-      <div className="grid grid-cols-2 gap-3 max-w-2xl">
-        <NumberCard
-          label={practiceTypeLabels.yoga}
-          value={yoga === null ? "—" : formatDelta(yoga)}
-        />
-        <NumberCard
-          label={practiceTypeLabels.meditation}
-          value={meditation === null ? "—" : formatDelta(meditation)}
-        />
-      </div>
-    </section>
-  );
-}
-
-function formatDelta(value: number): string {
-  const rounded = Math.round(value * 10) / 10;
-  const sign = rounded > 0 ? "+" : rounded < 0 ? "" : "±";
-  return `${sign}${rounded}`;
 }

@@ -24,8 +24,6 @@ export function toCreateInput(input: PracticeInput): Prisma.PracticeCreateInput 
     durationMin: input.durationMin,
     guidance: input.guidance,
     teacher: input.guidance === "self" ? null : (input.teacher ?? null),
-    moodBefore: input.moodBefore ?? null,
-    moodAfter: input.moodAfter ?? null,
     notes: input.notes ?? null,
   };
   if (input.type === "yoga") {
@@ -57,8 +55,6 @@ export function toUpdateInput(input: PracticeUpdate): Prisma.PracticeUpdateInput
   } else if (input.teacher !== undefined) {
     data.teacher = input.teacher ?? null;
   }
-  if (input.moodBefore !== undefined) data.moodBefore = input.moodBefore;
-  if (input.moodAfter !== undefined) data.moodAfter = input.moodAfter;
   if (input.notes !== undefined) data.notes = input.notes;
   if (input.type === "yoga" && input.yogaStyle !== undefined) {
     data.yogaStyle = input.yogaStyle;
@@ -165,9 +161,6 @@ export type PracticeSummary = {
   byMonth: PracticeBucket[];
   yogaStyleDistribution: Array<{ yogaStyle: string; count: number }>;
   focusObjectDistribution: Array<{ focusObject: string; count: number }>;
-  // average of (moodAfter - moodBefore); null when no practice of that type
-  // has both moods recorded.
-  moodDeltaByType: Record<PracticeType, number | null>;
 };
 
 export const practiceSummaryFilterSchema = z.object({
@@ -200,10 +193,6 @@ export function summarizePractices(practices: Practice[], tz: string): PracticeS
   const monthMap = new Map<string, PracticeBucket>();
   const yogaStyleMap = new Map<string, number>();
   const focusObjectMap = new Map<string, number>();
-  const moodSum: Record<PracticeType, { sum: number; n: number }> = {
-    yoga: { sum: 0, n: 0 },
-    meditation: { sum: 0, n: 0 },
-  };
 
   const bumpBucket = (
     map: Map<string, PracticeBucket>,
@@ -240,10 +229,6 @@ export function summarizePractices(practices: Practice[], tz: string): PracticeS
     for (const fo of p.focusObjects) {
       focusObjectMap.set(fo, (focusObjectMap.get(fo) ?? 0) + 1);
     }
-    if (p.moodBefore !== null && p.moodAfter !== null) {
-      moodSum[type].sum += p.moodAfter - p.moodBefore;
-      moodSum[type].n += 1;
-    }
   }
 
   const byBucketStart = (a: PracticeBucket, b: PracticeBucket) =>
@@ -262,9 +247,5 @@ export function summarizePractices(practices: Practice[], tz: string): PracticeS
       focusObject,
       count,
     })).sort(byCountDesc),
-    moodDeltaByType: {
-      yoga: moodSum.yoga.n > 0 ? moodSum.yoga.sum / moodSum.yoga.n : null,
-      meditation: moodSum.meditation.n > 0 ? moodSum.meditation.sum / moodSum.meditation.n : null,
-    },
   };
 }

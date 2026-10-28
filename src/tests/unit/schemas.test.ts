@@ -83,16 +83,9 @@ describe("practiceSchema (discriminated union)", () => {
     expect(result.success).toBe(false);
   });
 
-  it("rejects mood values outside the 1-5 range", () => {
-    const result = practiceSchema.safeParse({ ...baseYoga, moodBefore: 0 });
-    expect(result.success).toBe(false);
-  });
-
-  it("accepts optional mood and notes", () => {
+  it("accepts optional notes", () => {
     const result = practiceSchema.safeParse({
       ...baseYoga,
-      moodBefore: 3,
-      moodAfter: 4,
       notes: "Soft practice after an intense day",
     });
     expect(result.success).toBe(true);

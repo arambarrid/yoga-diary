@@ -27,7 +27,6 @@ export type FocusObject = z.infer<typeof focusObjectEnum>;
 export const positionEnum = z.enum(["bed", "chair", "zafu", "floor", "cushion", "other"]);
 export type Position = z.infer<typeof positionEnum>;
 
-const moodScale = z.number().int().min(1).max(5);
 
 const commonFields = {
   date: z.coerce.date(),
@@ -40,8 +39,6 @@ const commonFields = {
   // Optional teacher/guide name; only meaningful when the practice is guided.
   // Trimmed; original casing preserved for display.
   teacher: z.string().trim().min(1).max(100).optional().nullable(),
-  moodBefore: moodScale.optional().nullable(),
-  moodAfter: moodScale.optional().nullable(),
   notes: z.string().max(5000).optional().nullable(),
 };
 

@@ -53,14 +53,6 @@ export function PracticeCard({ practice }: { practice: Practice }) {
 
           {practice.notes ? <NotesPreview notes={practice.notes} /> : null}
 
-          {practice.moodBefore && practice.moodAfter ? (
-            <div className="flex items-center gap-1.5 text-xs text-ink-600 pt-1 border-t border-ink-400/10">
-              <span>mood</span>
-              <span className="font-medium text-ink-900">
-                {practice.moodBefore} → {practice.moodAfter}
-              </span>
-            </div>
-          ) : null}
         </div>
       </Card>
     </Link>

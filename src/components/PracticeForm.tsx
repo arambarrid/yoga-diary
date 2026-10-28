@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
 import { ChipMultiSelect } from "@/components/ui/ChipMultiSelect";
 import { Textarea } from "@/components/ui/Textarea";
-import { MoodSlider } from "@/components/ui/MoodSlider";
 import { focusObjectLabels, guidanceLabels, positionLabels, yogaStyleLabels } from "@/lib/labels";
 import type { FocusObject, Guidance, Position, PracticeInput, YogaStyle } from "@/lib/schemas";
 
@@ -21,8 +20,6 @@ type Initial = Partial<{
   durationMin: number;
   guidance: Guidance;
   teacher: string | null;
-  moodBefore: number | null;
-  moodAfter: number | null;
   notes: string | null;
   yogaStyle: YogaStyle | null;
   yogaStyleCustom: string | null;
@@ -134,8 +131,6 @@ export function PracticeForm({
             teacher: resolvedTeacher,
             yogaStyle: resolvedYogaStyle,
             yogaStyleCustom: resolvedYogaStyleCustom,
-            moodBefore: raw.moodBefore ? Number(raw.moodBefore) : null,
-            moodAfter: raw.moodAfter ? Number(raw.moodAfter) : null,
             notes: raw.notes ? String(raw.notes) : null,
           }
         : {
@@ -146,8 +141,6 @@ export function PracticeForm({
             teacher: resolvedTeacher,
             focusObjects: formData.getAll("focusObjects") as FocusObject[],
             position: raw.position as Position,
-            moodBefore: raw.moodBefore ? Number(raw.moodBefore) : null,
-            moodAfter: raw.moodAfter ? Number(raw.moodAfter) : null,
             notes: raw.notes ? String(raw.notes) : null,
           };
 
@@ -331,30 +324,6 @@ export function PracticeForm({
         </div>
       )}
 
-      <div className="flex flex-col gap-3">
-        <div>
-          <p className="text-sm font-medium text-ink-900">Mood</p>
-          <p className="text-xs text-ink-600">1: patrás · 5: prime</p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-          <div className="mx-auto w-full sm:w-fit text-center">
-            <Field label="Antes" htmlFor="moodBefore">
-              <MoodSlider
-                id="moodBefore"
-                name="moodBefore"
-                defaultValue={initial.moodBefore ?? 3}
-              />
-            </Field>
-          </div>
-
-          <div className="mx-auto w-full sm:w-fit text-center">
-            <Field label="Después" htmlFor="moodAfter">
-              <MoodSlider id="moodAfter" name="moodAfter" defaultValue={initial.moodAfter ?? 3} />
-            </Field>
-          </div>
-        </div>
-      </div>
 
       <Field label="Notas" htmlFor="notes" hint="Opcional · sensaciones, insights, contexto">
         <Textarea
